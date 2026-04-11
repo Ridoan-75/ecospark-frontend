@@ -1,0 +1,24 @@
+export const ROUTES = {
+  HOME: "/",
+  IDEAS: "/ideas",
+  IDEA_DETAILS: (id: string) => `/ideas/${id}`,
+  ABOUT: "/about",
+  LOGIN: "/login",
+  REGISTER: "/register",
+  PAYMENT_SUCCESS: "/payment/success",
+  PAYMENT_CANCEL: "/payment/cancel",
+
+  MEMBER_DASHBOARD: "/dashboard/member",
+  MEMBER_IDEAS: "/dashboard/member/ideas",
+  MEMBER_CREATE_IDEA: "/dashboard/member/ideas/create",
+  MEMBER_EDIT_IDEA: (id: string) => `/dashboard/member/ideas/${id}/edit`,
+  MEMBER_PAYMENTS: "/dashboard/member/payments",
+  MEMBER_PROFILE: "/dashboard/member/profile",
+
+  ADMIN_DASHBOARD: "/dashboard/admin",
+  ADMIN_USERS: "/dashboard/admin/users",
+  ADMIN_IDEAS: "/dashboard/admin/ideas",
+  ADMIN_CATEGORIES: "/dashboard/admin/categories",
+  ADMIN_PAYMENTS: "/dashboard/admin/payments",
+  ADMIN_NEWSLETTER: "/dashboard/admin/newsletter",
+} as const;
