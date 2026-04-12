@@ -1,16 +1,9 @@
 import { cn } from "@/lib/utils";
 
-export default function LoadingSpinner({
-  className,
-}: {
-  className?: string;
-}) {
+export default function LoadingSpinner({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        "w-8 h-8 border-4 border-slate-200 border-t-green-600 rounded-full animate-spin",
-        className
-      )}
-    />
+    <div className={cn("flex items-center justify-center py-16", className)}>
+      <div className="w-10 h-10 border-3 border-white/10 border-t-purple-500 rounded-full animate-spin" />
+    </div>
   );
 }
