@@ -21,10 +21,14 @@ export default function NewsletterSection() {
       await newsletterService.subscribe(email);
       toast.success("Subscribed successfully! 🌿");
       setEmail("");
-    } catch (error: AxiosError<Record<string, unknown>>) {
-      toast.error(
-        (error?.response?.data?.message as string) || "Something went wrong"
-      );
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(
+          (error?.response?.data?.message as string) || "Something went wrong"
+        );
+      } else {
+        toast.error("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -33,7 +37,7 @@ export default function NewsletterSection() {
   return (
     <section className="py-24 px-4 relative">
       {/* Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-600/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-purple-600/10 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="max-w-2xl mx-auto text-center relative z-10">
         <div className="glass gradient-border rounded-3xl p-10 md:p-14">
