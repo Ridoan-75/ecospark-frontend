@@ -1,256 +1,179 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/hooks/useAuth";
-import { ideaService } from "@/services/idea.service";
-import { paymentService } from "@/services/payment.service";
+import { Lightbulb, CheckCircle2, ThumbsUp, CreditCard, Plus, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { ROUTES } from "@/constants/routes";
-import { StatCard } from "@/components/dashboard/StatCard";
-import Link from "next/link";
-import {
-  Lightbulb,
-  CreditCard,
-  Clock,
-  Plus,
-  ArrowRight,
-  Sparkles,
-  CheckCircle2,
-} from "lucide-react";
+import { ideaService } from "@/services/idea.service";
+import { useAuth } from "@/hooks/useAuth";
+import StatCard from "@/components/dashboard/StatCard";
+import IdeaCard from "@/components/idea/IdeaCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { formatCurrency, formatDate, truncateText } from "@/lib/utils";
-import IdeaStatusBadge from "@/components/idea/IdeaStatusBadge";
 
-export default function MemberOverviewPage() {
+export default function MemberDashboardPage() {
   const { user } = useAuth();
 
-  const { data: ideasData, isLoading: ideasLoading } = useQuery({
+  const { data: myIdeasData, isLoading } = useQuery({
     queryKey: QUERY_KEYS.MY_IDEAS,
     queryFn: () => ideaService.getMyIdeas({ limit: 100 }),
   });
 
-  const { data: paymentsData, isLoading: paymentsLoading } = useQuery({
-    queryKey: QUERY_KEYS.MY_PAYMENTS,
-    queryFn: () => paymentService.getMyPayments(),
-  });
-
-  const ideas = ideasData?.data?.data ?? [];
-  const payments = paymentsData?.data ?? [];
-
-  const totalIdeas = ideas.length;
-  const approvedIdeas = ideas.filter((i) => i.status === "APPROVED").length;
-  const pendingIdeas = ideas.filter((i) => i.status === "UNDER_REVIEW").length;
-  const totalSpent = payments
-    .filter((p) => p.status === "SUCCESS")
-    .reduce((sum, p) => sum + p.amount, 0);
-
-  const recentIdeas = [...ideas]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 5);
-
-  const recentPayments = [...payments]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 3);
+  const ideas = myIdeasData?.data?.data ?? [];
+  const total = ideas.length;
+  const approved = ideas.filter((i) => i.status === "APPROVED").length;
+  const pending = ideas.filter((i) => i.status === "UNDER_REVIEW").length;
+  const draft = ideas.filter((i) => i.status === "DRAFT").length;
+  const rejected = ideas.filter((i) => i.status === "REJECTED").length;
+  const recentIdeas = ideas.slice(0, 3);
 
   return (
     <div className="space-y-8 animate-fade-in">
 
-      {/* Welcome Banner */}
-      <div className="glass gradient-border rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span className="text-emerald-400 text-sm font-medium">
-              Welcome back
-            </span>
-          </div>
-          <h1 className="text-2xl font-bold text-white mb-1">
-            Hello, {user?.name?.split(" ")[0]} 👋
-          </h1>
-          <p className="text-white/40 text-sm">
-            Here&apos;s what&apos;s happening with your ideas today.
-          </p>
-        </div>
-        <Link href={ROUTES.MEMBER_CREATE_IDEA} className="absolute top-6 right-6">
-          <Button className="btn-glow text-white border-0 rounded-xl gap-2 text-sm">
-            <Plus className="w-4 h-4" />
-            New Idea
-          </Button>
-        </Link>
+      {/* Welcome */}
+      <div>
+        <h1 className="text-2xl font-bold text-white">
+          Welcome back,{" "}
+          <span className="gradient-text-purple">
+            {user?.name.split(" ")[0]}
+          </span>{" "}
+          👋
+        </h1>
+        <p className="text-white/40 text-sm mt-1">
+          Here's an overview of your sustainability ideas
+        </p>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Total Ideas"
-          value={totalIdeas}
-          icon={Lightbulb}
-          accent="purple"
-          isLoading={ideasLoading}
-          description="All your submitted ideas"
-        />
-        <StatCard
-          label="Approved"
-          value={approvedIdeas}
-          icon={CheckCircle2}
-          accent="emerald"
-          isLoading={ideasLoading}
-          description="Live on the platform"
-        />
-        <StatCard
-          label="Under Review"
-          value={pendingIdeas}
-          icon={Clock}
-          accent="amber"
-          isLoading={ideasLoading}
-          description="Awaiting admin approval"
-        />
-        <StatCard
-          label="Total Spent"
-          value={formatCurrency(totalSpent)}
-          icon={CreditCard}
-          accent="blue"
-          isLoading={paymentsLoading}
-          description="On paid ideas"
-        />
-      </div>
-
-      {/* Bottom Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        {/* Recent Ideas */}
-        <div className="lg:col-span-2 glass gradient-border rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <Lightbulb className="w-4 h-4 text-purple-400" />
-              <h2 className="text-white font-semibold">Recent Ideas</h2>
+      {/* Stats */}
+      {isLoading ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="glass rounded-2xl p-5">
+              <Skeleton className="h-10 w-10 rounded-xl bg-white/5 mb-4" />
+              <Skeleton className="h-7 w-16 bg-white/5 mb-1" />
+              <Skeleton className="h-3 w-24 bg-white/5" />
             </div>
-            <Link
-              href={ROUTES.MEMBER_IDEAS}
-              className="flex items-center gap-1 text-purple-400 hover:text-purple-300 text-xs transition-colors"
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            title="Total Ideas"
+            value={total}
+            icon={Lightbulb}
+            color="purple"
+            subtitle={`${draft} drafts`}
+          />
+          <StatCard
+            title="Approved"
+            value={approved}
+            icon={CheckCircle2}
+            color="green"
+            subtitle="Publicly visible"
+          />
+          <StatCard
+            title="Under Review"
+            value={pending}
+            icon={ThumbsUp}
+            color="amber"
+            subtitle="Awaiting admin"
+          />
+          <StatCard
+            title="Rejected"
+            value={rejected}
+            icon={CreditCard}
+            color="red"
+            subtitle="Need revision"
+          />
+        </div>
+      )}
+
+      {/* Recent Ideas */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-white font-semibold">Recent Ideas</h2>
+          <Link href={ROUTES.MEMBER_IDEAS}>
+            <Button
+              variant="ghost"
+              className="text-white/40 hover:text-white text-xs gap-1.5 h-8"
             >
               View all
               <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-
-          {ideasLoading ? (
-            <div className="space-y-3">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-14 glass rounded-xl bg-white/5 animate-pulse" />
-              ))}
-            </div>
-          ) : recentIdeas.length === 0 ? (
-            <div className="text-center py-10">
-              <Lightbulb className="w-10 h-10 text-purple-400/30 mx-auto mb-3" />
-              <p className="text-white/40 text-sm">No ideas yet</p>
-              <Link href={ROUTES.MEMBER_CREATE_IDEA}>
-                <Button className="btn-glow text-white border-0 rounded-xl mt-4 text-xs px-4 h-8 gap-1.5">
-                  <Plus className="w-3.5 h-3.5" />
-                  Create your first idea
-                </Button>
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {recentIdeas.map((idea) => (
-                <Link
-                  key={idea.id}
-                  href={ROUTES.IDEA_DETAILS(idea.id)}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors group"
-                >
-                  <div className="w-8 h-8 rounded-lg glass-purple flex items-center justify-center shrink-0">
-                    <Lightbulb className="w-3.5 h-3.5 text-purple-400" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white/80 text-sm font-medium truncate group-hover:text-white transition-colors">
-                      {truncateText(idea.title, 45)}
-                    </p>
-                    <p className="text-white/30 text-xs">
-                      {idea.category.name} · {formatDate(idea.createdAt)}
-                    </p>
-                  </div>
-                  <IdeaStatusBadge status={idea.status} />
-                </Link>
-              ))}
-            </div>
-          )}
+            </Button>
+          </Link>
         </div>
 
-        {/* Recent Payments */}
-        <div className="glass gradient-border rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <CreditCard className="w-4 h-4 text-blue-400" />
-              <h2 className="text-white font-semibold">Payments</h2>
-            </div>
-            <Link
-              href={ROUTES.MEMBER_PAYMENTS}
-              className="flex items-center gap-1 text-purple-400 hover:text-purple-300 text-xs transition-colors"
-            >
-              View all
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-
-          {paymentsLoading ? (
-            <div className="space-y-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-16 glass rounded-xl bg-white/5 animate-pulse" />
-              ))}
-            </div>
-          ) : recentPayments.length === 0 ? (
-            <div className="text-center py-10">
-              <CreditCard className="w-10 h-10 text-blue-400/30 mx-auto mb-3" />
-              <p className="text-white/40 text-sm">No payments yet</p>
-              <p className="text-white/25 text-xs mt-1">
-                Purchase a paid idea to see it here
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {recentPayments.map((payment) => (
-                <div
-                  key={payment.id}
-                  className="glass rounded-xl p-3"
-                >
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <p className="text-white/70 text-xs font-medium line-clamp-1 flex-1">
-                    {typeof payment.idea === 'object' && payment.idea !== null && 'title' in payment.idea ? String((payment.idea as unknown as Record<string, unknown>).title) : "Idea"}
-                    </p>
-                    <span
-                      className={`text-xs font-semibold shrink-0 ${
-                        payment.status === "SUCCESS"
-                          ? "text-emerald-400"
-                          : payment.status === "PENDING"
-                          ? "text-amber-400"
-                          : "text-red-400"
-                      }`}
-                    >
-                      {formatCurrency(payment.amount)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/25 text-[10px]">
-                      {formatDate(payment.createdAt)}
-                    </span>
-                    <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full ${
-                        payment.status === "SUCCESS"
-                          ? "badge-green"
-                          : payment.status === "PENDING"
-                          ? "badge-amber"
-                          : "badge-red"
-                      }`}
-                    >
-                      {payment.status}
-                    </span>
-                  </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="glass rounded-2xl overflow-hidden">
+                <Skeleton className="h-40 w-full bg-white/5" />
+                <div className="p-4 space-y-2">
+                  <Skeleton className="h-3.5 w-3/4 bg-white/5" />
+                  <Skeleton className="h-3 w-full bg-white/5" />
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        ) : recentIdeas.length === 0 ? (
+          <div className="glass gradient-border rounded-2xl p-10 text-center">
+            <Lightbulb className="w-10 h-10 text-purple-400/50 mx-auto mb-3" />
+            <p className="text-white/50 text-sm mb-4">
+              You haven't created any ideas yet
+            </p>
+            <Link href={ROUTES.MEMBER_CREATE_IDEA}>
+              <Button className="btn-glow text-white border-0 gap-2 rounded-xl">
+                <Plus className="w-4 h-4" />
+                Create your first idea
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {recentIdeas.map((idea) => (
+              <IdeaCard key={idea.id} idea={idea} showStatus />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Quick Actions */}
+      <div>
+        <h2 className="text-white font-semibold mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            {
+              label: "Create New Idea",
+              href: ROUTES.MEMBER_CREATE_IDEA,
+              icon: Plus,
+              color: "btn-glow",
+            },
+            {
+              label: "Browse All Ideas",
+              href: ROUTES.IDEAS,
+              icon: Lightbulb,
+              color: "btn-glass",
+            },
+            {
+              label: "My Payments",
+              href: ROUTES.MEMBER_PAYMENTS,
+              icon: CreditCard,
+              color: "btn-glass",
+            },
+          ].map((action) => {
+            const Icon = action.icon;
+            return (
+              <Link key={action.href} href={action.href}>
+                <button
+                  className={`w-full ${action.color} text-white rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2 transition-all`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {action.label}
+                </button>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

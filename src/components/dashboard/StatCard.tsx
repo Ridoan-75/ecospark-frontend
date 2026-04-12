@@ -1,126 +1,97 @@
-import { LucideIcon, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 
-type TrendDirection = "up" | "down" | "neutral";
-
-interface StatCardProps {
-  label: string;
+type TStatCardProps = {
+  title: string;
   value: string | number;
+  subtitle?: string;
   icon: LucideIcon;
-  trend?: string;
-  trendDirection?: TrendDirection;
-  description?: string;
-  accent?: "purple" | "emerald" | "blue" | "amber" | "red";
-  isLoading?: boolean;
-  className?: string;
-}
+  trend?: {
+    value: number;
+    label: string;
+    positive?: boolean;
+  };
+  color?: "purple" | "green" | "blue" | "amber" | "red";
+};
 
-const accentMap: Record<
-  NonNullable<StatCardProps["accent"]>,
-  { bg: string; text: string; shadow: string }
-> = {
+const colorConfig = {
   purple: {
-    bg: "from-violet-500 to-purple-700",
-    text: "text-violet-400",
-    shadow: "shadow-violet-500/20",
+    icon: "text-purple-400",
+    bg: "bg-purple-500/15",
+    border: "border-purple-500/20",
+    trend: "text-purple-400",
   },
-  emerald: {
-    bg: "from-emerald-400 to-teal-600",
-    text: "text-emerald-400",
-    shadow: "shadow-emerald-500/20",
+  green: {
+    icon: "text-green-400",
+    bg: "bg-green-500/15",
+    border: "border-green-500/20",
+    trend: "text-green-400",
   },
   blue: {
-    bg: "from-sky-400 to-blue-600",
-    text: "text-sky-400",
-    shadow: "shadow-sky-500/20",
+    icon: "text-blue-400",
+    bg: "bg-blue-500/15",
+    border: "border-blue-500/20",
+    trend: "text-blue-400",
   },
   amber: {
-    bg: "from-amber-400 to-orange-500",
-    text: "text-amber-400",
-    shadow: "shadow-amber-500/20",
+    icon: "text-amber-400",
+    bg: "bg-amber-500/15",
+    border: "border-amber-500/20",
+    trend: "text-amber-400",
   },
   red: {
-    bg: "from-red-400 to-rose-600",
-    text: "text-red-400",
-    shadow: "shadow-red-500/20",
+    icon: "text-red-400",
+    bg: "bg-red-500/15",
+    border: "border-red-500/20",
+    trend: "text-red-400",
   },
 };
 
-const trendIconMap: Record<TrendDirection, LucideIcon> = {
-  up: TrendingUp,
-  down: TrendingDown,
-  neutral: Minus,
-};
-
-const trendColorMap: Record<TrendDirection, string> = {
-  up: "text-emerald-400",
-  down: "text-red-400",
-  neutral: "text-white/40",
-};
-
-export function StatCard({
-  label,
+export default function StatCard({
+  title,
   value,
+  subtitle,
   icon: Icon,
   trend,
-  trendDirection = "neutral",
-  description,
-  accent = "purple",
-  isLoading = false,
-  className,
-}: StatCardProps) {
-  const colors = accentMap[accent];
-  const TrendIcon = trendIconMap[trendDirection];
-
-  if (isLoading) {
-    return (
-      <div className={cn("glass gradient-border rounded-2xl p-5 flex flex-col gap-4", className)}>
-        <div className="flex items-start justify-between">
-          <Skeleton className="w-10 h-10 rounded-xl bg-white/5" />
-          <Skeleton className="w-14 h-5 rounded-full bg-white/5" />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Skeleton className="w-20 h-8 rounded-lg bg-white/5" />
-          <Skeleton className="w-28 h-4 rounded bg-white/5" />
-        </div>
-      </div>
-    );
-  }
+  color = "purple",
+}: TStatCardProps) {
+  const config = colorConfig[color];
 
   return (
-    <div className={cn("glass glass-hover gradient-border rounded-2xl p-5 flex flex-col gap-4 animate-fade-in", className)}>
-      {/* Top row */}
-      <div className="flex items-start justify-between">
+    <div className="glass gradient-border rounded-2xl p-5">
+      <div className="flex items-start justify-between mb-4">
         <div
           className={cn(
-            "w-10 h-10 rounded-xl bg-linear-to-br flex items-center justify-center shadow-lg",
-            colors.bg,
-            colors.shadow
+            "w-10 h-10 rounded-xl flex items-center justify-center border",
+            config.bg,
+            config.border
           )}
         >
-          <Icon className="w-5 h-5 text-white" />
+          <Icon className={cn("w-5 h-5", config.icon)} />
         </div>
 
         {trend && (
-          <span
+          <div
             className={cn(
-              "flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-white/5",
-              trendColorMap[trendDirection]
+              "text-xs font-medium px-2 py-1 rounded-lg",
+              trend.positive !== false
+                ? "text-green-400 bg-green-500/10"
+                : "text-red-400 bg-red-500/10"
             )}
           >
-            <TrendIcon className="w-3 h-3" />
-            {trend}
-          </span>
+            {trend.positive !== false ? "↑" : "↓"} {trend.value}%
+          </div>
         )}
       </div>
 
-      {/* Bottom row */}
       <div>
-        <p className="text-2xl font-bold text-white tabular-nums">{value}</p>
-        <p className="text-white/60 text-sm mt-0.5 font-medium">{label}</p>
-        {description && (
-          <p className="text-white/30 text-xs mt-1 leading-relaxed">{description}</p>
+        <p className="text-2xl font-bold text-white mb-0.5">{value}</p>
+        <p className="text-white/50 text-sm">{title}</p>
+        {subtitle && (
+          <p className="text-white/25 text-xs mt-1">{subtitle}</p>
+        )}
+        {trend && (
+          <p className="text-white/25 text-xs mt-1">{trend.label}</p>
         )}
       </div>
     </div>

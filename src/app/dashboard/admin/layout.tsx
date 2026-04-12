@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { AdminSidebar } from "@/components/layout/AdminSidebar";
-import { DashboardHeader } from "@/components/layout/DashboardHeader";
+import AdminSidebar from "@/components/layout/AdminSidebar";
+import DashboardHeader from "@/components/layout/DashboardHeader";
 
 export default async function AdminLayout({
   children,

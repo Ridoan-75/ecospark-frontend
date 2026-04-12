@@ -2,99 +2,120 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, ArrowLeft, ChevronDown } from "lucide-react";
+import { LogOut, Home, Bell, Menu } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuthStore } from "@/store/authStore";
+import { useAuth } from "@/hooks/useAuth";
 import { getInitials } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
 import { toast } from "sonner";
 
-interface DashboardHeaderProps {
-  title?: string;
-}
-
-export function DashboardHeader({ title }: DashboardHeaderProps) {
+export default function DashboardHeader() {
+  const { user, logout, isAdmin } = useAuth();
   const router = useRouter();
-  const { user, logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
     toast.success("Logged out successfully");
-    router.push(ROUTES.HOME);
+    router.push(ROUTES.LOGIN);
   };
 
   return (
-    <header className="navbar-glass h-16 flex items-center justify-between px-6 sticky top-0 z-30 shrink-0">
-      {/* Left */}
-      <div className="flex items-center gap-4">
-        <Link
-          href={ROUTES.HOME}
-          className="flex items-center gap-2 text-white/50 hover:text-white text-sm font-medium transition-colors group"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          Back to site
-        </Link>
+    <header className="navbar-glass border-b border-white/8 px-6 py-3 flex items-center justify-between shrink-0">
 
-        {title && (
-          <>
-            <span className="text-white/20 text-lg font-light">/</span>
-            <h1 className="text-white font-semibold text-sm">{title}</h1>
-          </>
-        )}
+      {/* Left — Page title area */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+          <span className="text-white/40 text-xs">
+            {isAdmin ? "Admin Panel" : "Member Panel"}
+          </span>
+        </div>
       </div>
 
-      {/* Right */}
-      {user && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2.5 glass rounded-xl px-3 py-2 hover:bg-white/5 transition-colors group outline-none">
-              <Avatar className="w-7 h-7">
-                <AvatarImage src={user.profileImage ?? ""} alt={user.name} />
-                <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-700 text-white text-xs font-semibold">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-left hidden sm:block">
-                <p className="text-white text-xs font-medium leading-tight">
+      {/* Right — Actions */}
+      <div className="flex items-center gap-3">
+
+        {/* Back to site */}
+        <Link href={ROUTES.HOME}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white/40 hover:text-white hover:bg-white/10 gap-2 rounded-xl h-9"
+          >
+            <Home className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline text-xs">Back to site</span>
+          </Button>
+        </Link>
+
+        {/* User Dropdown */}
+        {user && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2.5 glass rounded-xl px-3 py-1.5 hover:bg-white/10 transition-all">
+                <Avatar className="w-7 h-7">
+                  <AvatarImage src={user.profileImage || ""} />
+                  <AvatarFallback className="bg-purple-600 text-white text-xs font-bold">
+                    {getInitials(user.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="hidden sm:block text-left">
+                  <p className="text-white text-xs font-medium leading-none">
+                    {user.name.split(" ")[0]}
+                  </p>
+                  <p className="text-white/30 text-[10px] mt-0.5">
+                    {user.role}
+                  </p>
+                </div>
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="end"
+              className="w-48 bg-dark-200/95 backdrop-blur-xl border-white/10 text-white"
+            >
+              <div className="px-3 py-2 border-b border-white/10">
+                <p className="text-white text-sm font-medium truncate">
                   {user.name}
                 </p>
-                <p className="text-white/40 text-[10px] leading-tight capitalize">
-                  {user.role?.toLowerCase()}
-                </p>
+                <p className="text-white/40 text-xs truncate">{user.email}</p>
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-white/30 group-hover:text-white/60 transition-colors ml-0.5" />
-            </button>
-          </DropdownMenuTrigger>
 
-          <DropdownMenuContent
-            align="end"
-            className="glass gradient-border rounded-xl w-48 p-1 border-0 shadow-xl shadow-black/40 bg-[#0f1220]"
-          >
-            <DropdownMenuLabel className="text-white/50 text-xs px-2 py-1.5">
-              Signed in as
-              <span className="block text-white font-medium truncate">
-                {user.email}
-              </span>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-white/10 my-1" />
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-400 rounded-lg cursor-pointer text-sm px-2 py-2 transition-colors"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+              <DropdownMenuItem asChild>
+                <Link
+                  href={
+                    isAdmin
+                      ? ROUTES.ADMIN_DASHBOARD
+                      : ROUTES.MEMBER_PROFILE
+                  }
+                  className="flex items-center gap-2 cursor-pointer hover:bg-white/10 focus:bg-white/10 mt-1"
+                >
+                  <span className="text-sm">
+                    {isAdmin ? "Admin Dashboard" : "My Profile"}
+                  </span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="bg-white/10" />
+
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="flex items-center gap-2 cursor-pointer text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-400"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="text-sm">Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
     </header>
   );
 }

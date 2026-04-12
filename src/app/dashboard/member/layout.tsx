@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { MemberSidebar } from "@/components/layout/MemberSidebar";
-import { DashboardHeader } from "@/components/layout/DashboardHeader";
+import MemberSidebar from "@/components/layout/MemberSidebar";
+import DashboardHeader from "@/components/layout/DashboardHeader";
 
 export default async function MemberLayout({
   children,
