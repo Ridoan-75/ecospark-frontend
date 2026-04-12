@@ -28,7 +28,7 @@ type TLoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setAuth, isAdmin } = useAuth();
+  const { setAuth } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -53,9 +53,10 @@ export default function LoginPage() {
       } else {
         router.push(ROUTES.MEMBER_DASHBOARD);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as {response?: {data?: {message?: string}}};
       toast.error(
-        error?.response?.data?.message || "Invalid email or password"
+        err?.response?.data?.message || "Invalid email or password"
       );
     } finally {
       setLoading(false);
@@ -68,7 +69,7 @@ export default function LoginPage() {
       {/* Logo */}
       <div className="text-center mb-8">
         <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
             <Leaf className="w-5 h-5 text-white" />
           </div>
           <span className="text-white font-bold text-xl">
@@ -88,7 +89,7 @@ export default function LoginPage() {
           <span className="gradient-text">account</span>
         </h1>
         <p className="text-white/40 text-sm">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href={ROUTES.REGISTER}
             className="text-purple-400 hover:text-purple-300 font-medium transition-colors"

@@ -1,16 +1,21 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
+import { Edit } from "lucide-react";
 import { ideaService } from "@/services/idea.service";
 import { QUERY_KEYS } from "@/constants/queryKeys";
+import { ROUTES } from "@/constants/routes";
 import IdeaForm from "@/components/idea/IdeaForm";
 import PageHeader from "@/components/shared/PageHeader";
-import { Pencil } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 
 export default function EditIdeaPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: QUERY_KEYS.IDEA(id),
@@ -19,35 +24,56 @@ export default function EditIdeaPage() {
 
   const idea = data?.data;
 
-  if (isLoading) {
+  const { mutate, isPending } = useMutation({
+    mutationFn: (formData: FormData) => ideaService.update(id, formData),
+    onSuccess: () => {
+      toast.success("Idea updated successfully! ✅");
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS });
+      router.push(ROUTES.MEMBER_IDEAS);
+    },
+    onError: (err: AxiosError<Record<string, unknown>>) => {
+      toast.error((err?.response?.data?.message as string) || "Failed to update idea");
+    },
+  });
+
+  if (isLoading) return <LoadingSpinner />;
+
+  if (!idea) {
     return (
-      <div className="max-w-3xl mx-auto space-y-4">
-        <Skeleton className="h-10 w-64 bg-white/5" />
-        <div className="glass rounded-2xl p-6 space-y-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="space-y-2">
-              <Skeleton className="h-4 w-24 bg-white/5" />
-              <Skeleton className="h-12 w-full bg-white/5 rounded-xl" />
-            </div>
-          ))}
-        </div>
+      <div className="text-center py-16">
+        <p className="text-white/50">Idea not found</p>
       </div>
     );
   }
 
-  if (!idea) {
-    return <p className="text-white/50 text-center py-16">Idea not found</p>;
+  // শুধু DRAFT বা REJECTED idea edit করা যাবে
+  if (idea.status !== "DRAFT" && idea.status !== "REJECTED") {
+    router.push(ROUTES.MEMBER_IDEAS);
+    return null;
   }
 
   return (
     <div className="max-w-3xl mx-auto animate-fade-in">
       <PageHeader
-        icon={Pencil}
         title="Edit Idea"
         description={`Editing: ${idea.title}`}
+        icon={Edit}
       />
-      <div className="glass gradient-border rounded-2xl p-6">
-        <IdeaForm mode="edit" idea={idea} />
+      <div className="glass gradient-border rounded-2xl p-6 md:p-8">
+        {idea.status === "REJECTED" && idea.rejectionFeedback && (
+          <div className="badge-red rounded-xl p-4 mb-6 border border-red-500/25">
+            <p className="text-red-400 text-xs font-medium mb-1">
+              Rejection Feedback:
+            </p>
+            <p className="text-red-300 text-sm">{idea.rejectionFeedback}</p>
+          </div>
+        )}
+        <IdeaForm
+          defaultValues={idea}
+          onSubmit={(formData) => mutate(formData)}
+          loading={isPending}
+          submitLabel="Update Idea"
+        />
       </div>
     </div>
   );

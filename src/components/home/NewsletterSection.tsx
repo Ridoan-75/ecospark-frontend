@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -20,9 +21,9 @@ export default function NewsletterSection() {
       await newsletterService.subscribe(email);
       toast.success("Subscribed successfully! 🌿");
       setEmail("");
-    } catch (error: any) {
+    } catch (error: AxiosError<Record<string, unknown>>) {
       toast.error(
-        error?.response?.data?.message || "Something went wrong"
+        (error?.response?.data?.message as string) || "Something went wrong"
       );
     } finally {
       setLoading(false);

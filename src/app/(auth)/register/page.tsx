@@ -95,9 +95,10 @@ export default function RegisterPage() {
       setAuth(res.data.user, res.data.token);
       toast.success(`Welcome to EcoSpark, ${res.data.user.name.split(" ")[0]}! 🌿`);
       router.push(ROUTES.MEMBER_DASHBOARD);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as {response?: {data?: {message?: string}}};
       toast.error(
-        error?.response?.data?.message || "Registration failed. Please try again."
+        err?.response?.data?.message || "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -110,7 +111,7 @@ export default function RegisterPage() {
       {/* Logo */}
       <div className="text-center mb-8">
         <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
             <Leaf className="w-5 h-5 text-white" />
           </div>
           <span className="text-white font-bold text-xl">

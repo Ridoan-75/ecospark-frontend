@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Loader2, Send, Save } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/constants/queryKeys";
+import { categoryService } from "@/services/category.service";
+import { TIdea } from "@/types/idea.types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -20,43 +20,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import IdeaImageUpload from "./IdeaImageUpload";
-import { ideaService } from "@/services/idea.service";
-import { categoryService } from "@/services/category.service";
-import { QUERY_KEYS } from "@/constants/queryKeys";
-import { ROUTES } from "@/constants/routes";
-import { TIdea } from "@/types/idea.types";
+import ImageUpload from "@/components/shared/ImageUpload";
+import { Loader2 } from "lucide-react";
 
-const ideaSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters").max(150),
-  problemStatement: z.string().min(20, "Must be at least 20 characters"),
-  proposedSolution: z.string().min(20, "Must be at least 20 characters"),
-  description: z.string().min(50, "Must be at least 50 characters"),
-  categoryId: z.string().uuid("Please select a category"),
-  isPaid: z.boolean(),
-  price: z.number().min(1).optional().nullable(),
-}).refine((d) => !d.isPaid || (d.price && d.price > 0), {
-  message: "Price is required for paid ideas",
-  path: ["price"],
-});
+const ideaSchema = z
+  .object({
+    title: z
+      .string()
+      .min(5, "Title must be at least 5 characters")
+      .max(150, "Title too long"),
+    problemStatement: z
+      .string()
+      .min(20, "Problem statement must be at least 20 characters"),
+    proposedSolution: z
+      .string()
+      .min(20, "Proposed solution must be at least 20 characters"),
+    description: z
+      .string()
+      .min(50, "Description must be at least 50 characters"),
+    categoryId: z.string().min(1, "Please select a category"),
+    isPaid: z.boolean().default(false),
+    price: z.number().optional().nullable(),
+  })
+  .refine(
+    (data) => {
+      if (data.isPaid && (!data.price || data.price <= 0)) return false;
+      return true;
+    },
+    { message: "Price is required for paid ideas", path: ["price"] }
+  );
 
 type TIdeaForm = z.infer<typeof ideaSchema>;
 
 type TProps = {
-  idea?: TIdea;
-  mode: "create" | "edit";
+  defaultValues?: TIdea;
+  onSubmit: (formData: FormData) => void;
+  loading: boolean;
+  submitLabel?: string;
 };
 
-export default function IdeaForm({ idea, mode }: TProps) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const [files, setFiles] = useState<File[]>([]);
-  const [existingImages, setExistingImages] = useState<string[]>(idea?.images ?? []);
+export default function IdeaForm({
+  defaultValues,
+  onSubmit,
+  loading,
+  submitLabel = "Save Draft",
+}: TProps) {
+  const [newImages, setNewImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(
+    defaultValues?.images ?? []
+  );
 
   const { data: categoriesData } = useQuery({
     queryKey: QUERY_KEYS.CATEGORIES,
     queryFn: () => categoryService.getAll({ limit: 100 }),
   });
+
   const categories = categoriesData?.data?.data ?? [];
 
   const {
@@ -68,40 +86,19 @@ export default function IdeaForm({ idea, mode }: TProps) {
   } = useForm<TIdeaForm>({
     resolver: zodResolver(ideaSchema),
     defaultValues: {
-      title: idea?.title ?? "",
-      problemStatement: idea?.problemStatement ?? "",
-      proposedSolution: idea?.proposedSolution ?? "",
-      description: idea?.description ?? "",
-      categoryId: idea?.categoryId ?? "",
-      isPaid: idea?.isPaid ?? false,
-      price: idea?.price ?? null,
+      title: defaultValues?.title ?? "",
+      problemStatement: defaultValues?.problemStatement ?? "",
+      proposedSolution: defaultValues?.proposedSolution ?? "",
+      description: defaultValues?.description ?? "",
+      categoryId: defaultValues?.categoryId ?? "",
+      isPaid: defaultValues?.isPaid ?? false,
+      price: defaultValues?.price ?? null,
     },
   });
 
   const isPaid = watch("isPaid");
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: (formData: FormData) =>
-      mode === "create"
-        ? ideaService.create(formData)
-        : ideaService.update(idea!.id, formData),
-    onSuccess: () => {
-      toast.success(mode === "create" ? "Idea created as draft!" : "Idea updated!");
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS });
-      router.push(ROUTES.MEMBER_IDEAS);
-    },
-    onError: (err: unknown) => {
-      const error = err as {response?: {data?: {message?: string}}};
-      toast.error(error?.response?.data?.message ?? "Something went wrong");
-    },
-  });
-
-  const onSubmit = (data: TIdeaForm) => {
-    if (files.length === 0 && existingImages.length === 0) {
-      toast.error("Please upload at least one image");
-      return;
-    }
-
+  const handleFormSubmit = (data: TIdeaForm) => {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("problemStatement", data.problemStatement);
@@ -109,158 +106,176 @@ export default function IdeaForm({ idea, mode }: TProps) {
     formData.append("description", data.description);
     formData.append("categoryId", data.categoryId);
     formData.append("isPaid", String(data.isPaid));
-    if (data.isPaid && data.price) formData.append("price", String(data.price));
+    if (data.isPaid && data.price) {
+      formData.append("price", String(data.price));
+    }
     existingImages.forEach((url) => formData.append("images", url));
-    files.forEach((file) => formData.append("images", file));
-
-    mutate(formData);
+    newImages.forEach((file) => formData.append("images", file));
+    onSubmit(formData);
   };
 
+  const inputClass = "input-glass h-11 rounded-xl";
+  const labelClass = "text-white/70 text-sm font-medium";
+  const errorClass = "text-red-400 text-xs mt-1 flex items-center gap-1";
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+
       {/* Title */}
       <div className="space-y-2">
-        <Label className="text-white/70 text-sm">Idea Title *</Label>
+        <Label className={labelClass}>Title *</Label>
         <Input
           {...register("title")}
-          placeholder="A clear, compelling title for your idea"
-          className="input-glass h-12 rounded-xl"
+          placeholder="e.g. Solar Panel Grid for Rural Villages"
+          className={inputClass}
         />
-        {errors.title && <p className="text-red-400 text-xs">⚠ {errors.title.message}</p>}
+        {errors.title && (
+          <p className={errorClass}>⚠ {errors.title.message}</p>
+        )}
       </div>
 
-      {/* Category */}
-      <div className="space-y-2">
-        <Label className="text-white/70 text-sm">Category *</Label>
-        <Select
-          value={watch("categoryId")}
-          onValueChange={(v) => setValue("categoryId", v)}
-        >
-          <SelectTrigger className="input-glass h-12 rounded-xl">
-            <SelectValue placeholder="Select a category" />
-          </SelectTrigger>
-          <SelectContent className="bg-dark-200 border-white/10 text-white">
-            {categories.map((cat) => (
-              <SelectItem key={cat.id} value={cat.id} className="hover:bg-white/10 focus:bg-white/10">
-                {cat.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.categoryId && <p className="text-red-400 text-xs">⚠ {errors.categoryId.message}</p>}
+      {/* Category + isPaid row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label className={labelClass}>Category *</Label>
+          <Select
+            value={watch("categoryId")}
+            onValueChange={(v) => setValue("categoryId", v)}
+          >
+            <SelectTrigger className="input-glass h-11 rounded-xl">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent className="bg-dark-200 border-white/10 text-white">
+              {categories.map((cat) => (
+                <SelectItem
+                  key={cat.id}
+                  value={cat.id}
+                  className="hover:bg-white/10 focus:bg-white/10"
+                >
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.categoryId && (
+            <p className={errorClass}>⚠ {errors.categoryId.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label className={labelClass}>Pricing</Label>
+          <div className="glass rounded-xl h-11 px-4 flex items-center justify-between border border-white/10">
+            <span className="text-white/60 text-sm">
+              {isPaid ? "Paid idea" : "Free idea"}
+            </span>
+            <Switch
+              checked={isPaid}
+              onCheckedChange={(v) => {
+                setValue("isPaid", v);
+                if (!v) setValue("price", null);
+              }}
+            />
+          </div>
+        </div>
       </div>
+
+      {/* Price — show if isPaid */}
+      {isPaid && (
+        <div className="space-y-2">
+          <Label className={labelClass}>Price (USD) *</Label>
+          <Input
+            type="number"
+            step="0.01"
+            min="1"
+            placeholder="e.g. 9.99"
+            className={inputClass}
+            onChange={(e) =>
+              setValue("price", parseFloat(e.target.value) || null)
+            }
+            defaultValue={defaultValues?.price ?? ""}
+          />
+          {errors.price && (
+            <p className={errorClass}>⚠ {errors.price.message}</p>
+          )}
+        </div>
+      )}
 
       {/* Problem Statement */}
       <div className="space-y-2">
-        <Label className="text-white/70 text-sm">Problem Statement *</Label>
+        <Label className={labelClass}>Problem Statement *</Label>
         <Textarea
           {...register("problemStatement")}
-          placeholder="Describe the environmental problem you're addressing..."
-          rows={3}
+          placeholder="Describe the environmental problem this idea addresses..."
+          rows={4}
           className="input-glass rounded-xl resize-none"
         />
-        {errors.problemStatement && <p className="text-red-400 text-xs">⚠ {errors.problemStatement.message}</p>}
+        {errors.problemStatement && (
+          <p className={errorClass}>⚠ {errors.problemStatement.message}</p>
+        )}
       </div>
 
       {/* Proposed Solution */}
       <div className="space-y-2">
-        <Label className="text-white/70 text-sm">Proposed Solution *</Label>
+        <Label className={labelClass}>Proposed Solution *</Label>
         <Textarea
           {...register("proposedSolution")}
-          placeholder="Describe your proposed solution..."
-          rows={3}
+          placeholder="Explain how your idea solves the problem..."
+          rows={4}
           className="input-glass rounded-xl resize-none"
         />
-        {errors.proposedSolution && <p className="text-red-400 text-xs">⚠ {errors.proposedSolution.message}</p>}
+        {errors.proposedSolution && (
+          <p className={errorClass}>⚠ {errors.proposedSolution.message}</p>
+        )}
       </div>
 
       {/* Description */}
       <div className="space-y-2">
-        <Label className="text-white/70 text-sm">Full Description *</Label>
+        <Label className={labelClass}>Full Description *</Label>
         <Textarea
           {...register("description")}
-          placeholder="Provide a detailed description — implementation steps, impact, feasibility..."
+          placeholder="Provide a detailed description of your idea, including implementation steps, expected outcomes, and any relevant data..."
           rows={6}
           className="input-glass rounded-xl resize-none"
         />
-        {errors.description && <p className="text-red-400 text-xs">⚠ {errors.description.message}</p>}
+        {errors.description && (
+          <p className={errorClass}>⚠ {errors.description.message}</p>
+        )}
       </div>
 
       {/* Images */}
       <div className="space-y-2">
-        <Label className="text-white/70 text-sm">Images * (1–5)</Label>
-        <IdeaImageUpload
-          files={files}
-          onChange={setFiles}
-          existingUrls={existingImages}
-          onRemoveExisting={(url) => setExistingImages((prev) => prev.filter((u) => u !== url))}
+        <Label className={labelClass}>Images (max 5)</Label>
+        <ImageUpload
+          value={newImages}
+          onChange={setNewImages}
+          existingImages={existingImages}
+          onRemoveExisting={(url) =>
+            setExistingImages((prev) => prev.filter((u) => u !== url))
+          }
           maxFiles={5}
         />
-      </div>
-
-      {/* Paid Toggle */}
-      <div className="glass gradient-border rounded-xl p-5">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <Label className="text-white/80 text-sm font-medium">Premium Idea</Label>
-            <p className="text-white/40 text-xs mt-0.5">
-              Charge users to access the full details of this idea
-            </p>
-          </div>
-          <Switch
-            checked={isPaid}
-            onCheckedChange={(v) => {
-              setValue("isPaid", v);
-              if (!v) setValue("price", null);
-            }}
-          />
-        </div>
-        {isPaid && (
-          <div className="space-y-2">
-            <Label className="text-white/70 text-sm">Price (USD) *</Label>
-            <Input
-              type="number"
-              step="0.01"
-              min="1"
-              placeholder="e.g. 9.99"
-              className="input-glass h-10 rounded-xl"
-              {...register("price", {
-                valueAsNumber: true,
-              })}
-            />
-            {errors.price && <p className="text-red-400 text-xs">⚠ {errors.price.message}</p>}
-          </div>
+        {newImages.length === 0 && existingImages.length === 0 && (
+          <p className="text-white/25 text-xs">
+            At least 1 image recommended
+          </p>
         )}
       </div>
 
-      {/* Actions */}
-      <div className="flex gap-3 pt-2">
-        <Button
-          type="button"
-          onClick={() => router.back()}
-          className="btn-glass text-white/60 hover:text-white rounded-xl px-6"
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          disabled={isPending}
-          className="btn-glow text-white border-0 rounded-xl px-8 gap-2 flex-1"
-        >
-          {isPending ? (
+      {/* Submit */}
+      <Button
+        type="submit"
+        disabled={loading}
+        className="w-full btn-glow text-white border-0 h-12 rounded-xl gap-2"
+      >
+        {loading ? (
+          <>
             <Loader2 className="w-4 h-4 animate-spin" />
-          ) : mode === "create" ? (
-            <Save className="w-4 h-4" />
-          ) : (
-            <Send className="w-4 h-4" />
-          )}
-          {isPending
-            ? "Saving..."
-            : mode === "create"
-            ? "Save as Draft"
-            : "Update Idea"}
-        </Button>
-      </div>
+            Saving...
+          </>
+        ) : (
+          submitLabel
+        )}
+      </Button>
     </form>
   );
 }
