@@ -26,7 +26,9 @@ export default async function AdminLayout({
       <div className="flex-1 flex flex-col min-w-0">
         <DashboardHeader />
         <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-auto">
-          {children}
+          <div className="glass gradient-border rounded-2xl p-4 sm:p-6 md:p-8 h-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

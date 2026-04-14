@@ -29,6 +29,7 @@ import Logo from "@/components/shared/Logo";
 const navLinks = [
   { label: "Home", href: ROUTES.HOME },
   { label: "Ideas", href: ROUTES.IDEAS },
+  { label: "How It Works", href: ROUTES.HOW_IT_WORKS },
   { label: "About", href: ROUTES.ABOUT },
 ];
 

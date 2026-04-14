@@ -61,7 +61,7 @@ export default function HeroBanner() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <Link href={ROUTES.REGISTER}>
+          <Link href={ROUTES.HOW_IT_WORKS}>
             <Button
               size="lg"
               variant="outline"
