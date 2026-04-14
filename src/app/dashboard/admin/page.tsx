@@ -57,22 +57,22 @@ export default function AdminDashboardPage() {
   const totalPayments = paymentsResult?.stats?.totalSuccessfulPayments ?? 0;
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
 
       <div>
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-xl sm:text-2xl font-bold text-white">
           Admin <span className="gradient-text-purple">Overview</span>
         </h1>
-        <p className="text-white/40 text-sm mt-1">
+        <p className="text-white/40 text-xs sm:text-sm mt-1">
           Platform statistics and pending actions
         </p>
       </div>
 
       {/* Stats */}
       {isLoading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="glass rounded-2xl p-5">
+            <div key={i} className="glass rounded-2xl p-4 sm:p-5">
               <Skeleton className="h-10 w-10 rounded-xl bg-white/5 mb-4" />
               <Skeleton className="h-7 w-16 bg-white/5 mb-1" />
               <Skeleton className="h-3 w-24 bg-white/5" />
@@ -80,7 +80,7 @@ export default function AdminDashboardPage() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatCard
             title="Total Users"
             value={totalUsers}

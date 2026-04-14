@@ -33,25 +33,25 @@ export default function PaymentTable() {
   const stats = ((data?.data as Record<string, unknown>)?.data as Record<string, unknown>)?.stats as undefined | {totalRevenue: number; totalSuccessfulPayments: number};
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className="glass gradient-border rounded-xl p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="glass gradient-border rounded-xl p-3 sm:p-4">
             <p className="text-white/40 text-xs mb-1">Total Revenue</p>
-            <p className="text-2xl font-bold text-green-400">{formatCurrency(stats.totalRevenue)}</p>
+            <p className="text-xl sm:text-2xl font-bold text-green-400">{formatCurrency(stats.totalRevenue)}</p>
           </div>
-          <div className="glass gradient-border rounded-xl p-4">
+          <div className="glass gradient-border rounded-xl p-3 sm:p-4">
             <p className="text-white/40 text-xs mb-1">Successful Payments</p>
-            <p className="text-2xl font-bold text-white">{stats.totalSuccessfulPayments}</p>
+            <p className="text-xl sm:text-2xl font-bold text-white">{stats.totalSuccessfulPayments}</p>
           </div>
         </div>
       )}
 
       {/* Filter */}
-      <div className="flex gap-3">
+      <div className="flex gap-2 sm:gap-3">
         <Select value={status || "all"} onValueChange={(v) => { setStatus(v === "all" ? "" : v); setPage(1); }}>
-          <SelectTrigger className="input-glass h-10 rounded-xl w-44">
+          <SelectTrigger className="input-glass h-9 sm:h-10 rounded-xl w-32 sm:w-44 text-xs sm:text-sm">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent className="bg-dark-200 border-white/10 text-white">
@@ -65,22 +65,22 @@ export default function PaymentTable() {
       </div>
 
       <div className="glass gradient-border rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto text-xs sm:text-sm">
           <table className="w-full table-glass">
             <thead>
               <tr>
-                <th className="px-4 py-3 text-left">User</th>
-                <th className="px-4 py-3 text-left">Idea</th>
-                <th className="px-4 py-3 text-left">Amount</th>
-                <th className="px-4 py-3 text-left">Status</th>
-                <th className="px-4 py-3 text-left">Date</th>
+                <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">User</th>
+                <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Idea</th>
+                <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Amount</th>
+                <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Status</th>
+                <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Date</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>{Array.from({ length: 5 }).map((_, j) => (
-                    <td key={j} className="px-4 py-3"><Skeleton className="h-4 bg-white/5 rounded" /></td>
+                    <td key={j} className="px-2 sm:px-4 py-2 sm:py-3"><Skeleton className="h-4 bg-white/5 rounded" /></td>
                   ))}</tr>
                 ))
               ) : payments.length === 0 ? (
@@ -88,26 +88,29 @@ export default function PaymentTable() {
               ) : (
                 payments.map((p) => (
                   <tr key={p.id}>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="w-7 h-7">
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <Avatar className="w-6 h-6 sm:w-7 sm:h-7">
                           <AvatarImage src={p.user?.profileImage || ""} />
                           <AvatarFallback className="bg-purple-600 text-white text-xs">{getInitials(p.user?.name ?? "U")}</AvatarFallback>
                         </Avatar>
-                        <div>
+                        <div className="hidden sm:block">
                           <p className="text-white/80 text-xs font-medium">{p.user?.name ?? "—"}</p>
                           <p className="text-white/30 text-[10px]">{p.user?.email ?? "—"}</p>
                         </div>
+                        <div className="sm:hidden">
+                          <p className="text-white/80 text-xs font-medium">{p.user?.name?.split(" ")[0] ?? "—"}</p>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-white/50 text-xs max-w-36">
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-white/50 text-xs max-w-36">
                       <p className="line-clamp-1">{p.idea?.title ?? "—"}</p>
                     </td>
-                    <td className="px-4 py-3 text-green-400 font-semibold text-sm">{formatCurrency(p.amount)}</td>
-                    <td className="px-4 py-3">
-                      <span className={cn("rounded-full px-2.5 py-1 text-xs", statusClass[p.status] ?? "badge-blue")}>{p.status}</span>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-green-400 font-semibold text-xs sm:text-sm">{formatCurrency(p.amount)}</td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3">
+                      <span className={cn("rounded-full px-2 sm:px-2.5 py-1 text-xs", statusClass[p.status] ?? "badge-blue")}>{p.status}</span>
                     </td>
-                    <td className="px-4 py-3 text-white/40 text-xs">{formatDate(p.createdAt)}</td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-white/40 text-xs">{formatDate(p.createdAt)}</td>
                   </tr>
                 ))
               )}
@@ -115,10 +118,10 @@ export default function PaymentTable() {
           </table>
         </div>
         {meta && meta.totalPage > 1 && (
-          <div className="flex justify-center gap-2 p-4 border-t border-white/8">
+          <div className="flex justify-center gap-1 sm:gap-2 p-2 sm:p-4 border-t border-white/8 overflow-x-auto">
             {Array.from({ length: meta.totalPage }, (_, i) => i + 1).map((p) => (
               <button key={p} onClick={() => setPage(p)}
-                className={`w-8 h-8 rounded-lg text-xs font-medium transition-all ${p === page ? "btn-glow text-white" : "glass text-white/50 hover:text-white"}`}>
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs font-medium transition-all flex-shrink-0 ${p === page ? "btn-glow text-white" : "glass text-white/50 hover:text-white"}`}>
                 {p}
               </button>
             ))}

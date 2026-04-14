@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,41 +42,38 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
     filters.isPaid ||
     filters.sortBy !== "recent";
 
+  const triggerClass =
+    "bg-white/8 border border-white/20 hover:border-white/30 focus:border-white/40 h-[52px] rounded-xl text-white transition-all w-full px-4";
+
+  const itemClass = "hover:bg-white/10 focus:bg-white/10 cursor-pointer";
+
   return (
-    <div className="glass gradient-border rounded-2xl p-4 mb-6">
-      <div className="flex flex-col md:flex-row gap-3">
+    <div className="rounded-2xl p-4 sm:p-5 mb-8 backdrop-blur-xl bg-white/5 border border-white/15">
+      <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-3 items-center">
 
         {/* Search */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none z-10" />
           <Input
             placeholder="Search ideas..."
             value={filters.searchTerm}
             onChange={(e) => onChange({ searchTerm: e.target.value })}
-            className="input-glass pl-10 h-10 rounded-xl"
+            className="bg-white/8 border border-white/20 hover:border-white/30 focus:border-white/40 pl-11 h-[52px] rounded-xl text-white placeholder:text-white/40 transition-all w-full"
           />
         </div>
 
         {/* Category */}
         <Select
           value={filters.categoryId || "all"}
-          onValueChange={(v) =>
-            onChange({ categoryId: v === "all" ? "" : v })
-          }
+          onValueChange={(v) => onChange({ categoryId: v === "all" ? "" : v })}
         >
-          <SelectTrigger className="input-glass h-10 rounded-xl w-full md:w-44">
+          <SelectTrigger className={triggerClass}>
             <SelectValue placeholder="Category" />
           </SelectTrigger>
-          <SelectContent className="bg-dark-200 border-white/10 text-white">
-            <SelectItem value="all" className="hover:bg-white/10 focus:bg-white/10">
-              All Categories
-            </SelectItem>
+          <SelectContent className="bg-[#1a1a2e]/95 backdrop-blur-xl border-white/15 text-white rounded-xl">
+            <SelectItem value="all" className={itemClass}>All Categories</SelectItem>
             {categories.map((cat) => (
-              <SelectItem
-                key={cat.id}
-                value={cat.id}
-                className="hover:bg-white/10 focus:bg-white/10"
-              >
+              <SelectItem key={cat.id} value={cat.id} className={itemClass}>
                 {cat.name}
               </SelectItem>
             ))}
@@ -86,23 +83,15 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
         {/* Payment Filter */}
         <Select
           value={filters.isPaid || "all"}
-          onValueChange={(v) =>
-            onChange({ isPaid: v === "all" ? "" : v })
-          }
+          onValueChange={(v) => onChange({ isPaid: v === "all" ? "" : v })}
         >
-          <SelectTrigger className="input-glass h-10 rounded-xl w-full md:w-36">
+          <SelectTrigger className={triggerClass}>
             <SelectValue placeholder="Type" />
           </SelectTrigger>
-          <SelectContent className="bg-dark-200 border-white/10 text-white">
-            <SelectItem value="all" className="hover:bg-white/10 focus:bg-white/10">
-              All Types
-            </SelectItem>
-            <SelectItem value="false" className="hover:bg-white/10 focus:bg-white/10">
-              Free Only
-            </SelectItem>
-            <SelectItem value="true" className="hover:bg-white/10 focus:bg-white/10">
-              Paid Only
-            </SelectItem>
+          <SelectContent className="bg-[#1a1a2e]/95 backdrop-blur-xl border-white/15 text-white rounded-xl">
+            <SelectItem value="all" className={itemClass}>All Types</SelectItem>
+            <SelectItem value="false" className={itemClass}>Free Only</SelectItem>
+            <SelectItem value="true" className={itemClass}>Paid Only</SelectItem>
           </SelectContent>
         </Select>
 
@@ -111,16 +100,12 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
           value={filters.sortBy || "recent"}
           onValueChange={(v) => onChange({ sortBy: v })}
         >
-          <SelectTrigger className="input-glass h-10 rounded-xl w-full md:w-44">
+          <SelectTrigger className={triggerClass}>
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
-          <SelectContent className="bg-dark-200 border-white/10 text-white">
+          <SelectContent className="bg-[#1a1a2e]/95 backdrop-blur-xl border-white/15 text-white rounded-xl">
             {IDEA_SORT_OPTIONS.map((opt) => (
-              <SelectItem
-                key={opt.value}
-                value={opt.value}
-                className="hover:bg-white/10 focus:bg-white/10"
-              >
+              <SelectItem key={opt.value} value={opt.value} className={itemClass}>
                 {opt.label}
               </SelectItem>
             ))}
@@ -132,9 +117,9 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
           <Button
             onClick={onReset}
             variant="ghost"
-            className="h-10 px-3 text-white/50 hover:text-white hover:bg-white/10 rounded-xl gap-1.5 shrink-0"
+            className="h-[52px] px-4 text-white/50 hover:text-white hover:bg-white/10 rounded-xl gap-2 shrink-0 transition-all border border-white/15"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-4 h-4" />
             Reset
           </Button>
         )}
