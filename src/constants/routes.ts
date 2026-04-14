@@ -3,6 +3,7 @@ export const ROUTES = {
   IDEAS: "/ideas",
   IDEA_DETAILS: (id: string) => `/ideas/${id}`,
   ABOUT: "/about",
+  HOW_IT_WORKS: "/how-it-works",
   LOGIN: "/login",
   REGISTER: "/register",
   PAYMENT_SUCCESS: "/payment/success",

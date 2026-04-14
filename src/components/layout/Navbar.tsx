@@ -43,44 +43,45 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Glass navbar with enhanced styling */}
-      <nav className="backdrop-blur-xl bg-gradient-to-r from-dark-400/40 via-dark-300/40 to-dark-400/40 border border-white/10 shadow-2xl mx-1 mt-3 rounded-2xl px-4 py-3">
-        <div className="max-w-full mx-auto flex items-center justify-between px-3">
+      <nav className="backdrop-blur-xl bg-dark-400/60 border border-white/10 shadow-2xl mx-2 mt-3 rounded-2xl px-5 py-3">
 
-          {/* Logo */}
-          <Logo variant="compact" />
+        {/* 3 column layout: Logo | Nav Links | Buttons */}
+        <div className="flex items-center justify-between relative h-12">
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* LEFT — Logo */}
+          <div className="flex-shrink-0">
+            <Logo variant="compact" />
+          </div>
+
+          {/* CENTER — Nav Links */}
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 relative group",
+                  "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
                   pathname === link.href
-                    ? "text-emerald-400 bg-emerald-500/10 border border-emerald-400/30"
-                    : "text-white/70 hover:text-emerald-400 hover:bg-emerald-500/10"
+                    ? "text-purple-400 bg-purple-500/10 border border-purple-400/30"
+                    : "text-white/60 hover:text-purple-400 hover:bg-purple-500/10 border border-transparent"
                 )}
               >
                 {link.label}
-                {pathname === link.href && (
-                  <div className="absolute bottom-1 left-4 right-4 h-0.5 bg-emerald-400 rounded-full" />
-                )}
               </Link>
             ))}
           </div>
 
-          {/* Right Side */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* RIGHT — Auth Buttons */}
+          <div className="hidden md:flex items-center gap-2 flex-shrink-0">
             {isAuthenticated && user ? (
               <>
+                {/* Dashboard Button */}
                 <Link href={dashboardRoute}>
                   <Button
-                    size="lg"
-                    className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 gap-2 border border-emerald-400/30 hover:border-emerald-400/50 transition-all duration-200 font-medium bg-transparent h-10 px-5"
+                    size="sm"
+                    className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 gap-2 border border-purple-400/30 hover:border-purple-400/50 transition-all duration-200 font-medium bg-transparent h-10 px-4 rounded-lg text-sm"
                   >
-                    <LayoutDashboard className="w-5 h-5" />
+                    <LayoutDashboard className="w-4 h-4" />
                     Dashboard
                   </Button>
                 </Link>
@@ -88,39 +89,38 @@ export default function Navbar() {
                 {/* User Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-3 glass rounded-xl px-4 py-2.5 hover:bg-emerald-500/10 transition-all border border-emerald-400/30 hover:border-emerald-400/50 duration-200 h-10">
-                      <Avatar className="w-8 h-8">
+                    <button className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-purple-500/10 transition-all border border-purple-400/30 hover:border-purple-400/50 duration-200 h-10">
+                      <Avatar className="w-6 h-6">
                         <AvatarImage src={user.profileImage || ""} />
-                        <AvatarFallback className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white text-xs font-semibold">
+                        <AvatarFallback className="bg-gradient-to-br from-purple-600 to-violet-600 text-white text-[10px] font-semibold">
                           {getInitials(user.name)}
                         </AvatarFallback>
                       </Avatar>
                       <span className="text-white/80 text-sm font-medium">
                         {user.name.split(" ")[0]}
                       </span>
-                      <ChevronDown className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors" />
+                      <ChevronDown className="w-3.5 h-3.5 text-white/40" />
                     </button>
                   </DropdownMenuTrigger>
-
-                    <DropdownMenuContent
+                  <DropdownMenuContent
                     align="end"
-                    className="w-52 glass border-emerald-400/30 bg-dark-200/90 backdrop-blur-xl text-white shadow-xl"
+                    className="w-52 border-purple-400/30 bg-dark-200/90 backdrop-blur-xl text-white shadow-xl rounded-xl"
                   >
                     <DropdownMenuItem asChild>
                       <Link
                         href={ROUTES.MEMBER_PROFILE}
-                        className="flex items-center gap-3 cursor-pointer hover:bg-emerald-500/10 focus:bg-emerald-500/10 transition-all duration-200 py-2.5"
+                        className="flex items-center gap-3 cursor-pointer hover:bg-purple-500/10 focus:bg-purple-500/10 transition-all duration-200 py-2.5"
                       >
-                        <User className="w-5 h-5 text-emerald-400" />
+                        <User className="w-4 h-4 text-purple-400" />
                         <span className="font-medium">Profile</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link
                         href={dashboardRoute}
-                        className="flex items-center gap-3 cursor-pointer hover:bg-emerald-500/10 focus:bg-emerald-500/10 transition-all duration-200 py-2.5"
+                        className="flex items-center gap-3 cursor-pointer hover:bg-purple-500/10 focus:bg-purple-500/10 transition-all duration-200 py-2.5"
                       >
-                        <LayoutDashboard className="w-5 h-5 text-emerald-400" />
+                        <LayoutDashboard className="w-4 h-4 text-purple-400" />
                         <span className="font-medium">Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
@@ -129,7 +129,7 @@ export default function Navbar() {
                       onClick={logout}
                       className="flex items-center gap-3 cursor-pointer text-red-400 hover:bg-red-500/10 hover:text-red-300 focus:bg-red-500/10 focus:text-red-300 transition-all duration-200 py-2.5"
                     >
-                      <LogOut className="w-5 h-5" />
+                      <LogOut className="w-4 h-4" />
                       <span className="font-medium">Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -139,18 +139,22 @@ export default function Navbar() {
               <>
                 <Link href={ROUTES.LOGIN}>
                   <Button
-                    size="lg"
-                    className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 border border-emerald-400/30 hover:border-emerald-400/50 transition-all duration-200 font-semibold bg-transparent h-10 px-6"
+                    size="sm"
+                    className="text-white/75 hover:text-white hover:bg-white/5 border border-white/15 hover:border-white/25 transition-all duration-200 font-medium bg-transparent h-10 px-5 rounded-lg text-sm"
                   >
                     Log in
                   </Button>
                 </Link>
+
+                {/* Divider */}
+                <div className="w-px h-5 bg-white/10" />
+
                 <Link href={ROUTES.REGISTER}>
                   <Button
-                    size="lg"
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-lg hover:shadow-emerald-500/50 shadow-emerald-500/30 transition-all duration-200 font-semibold h-10 px-6"
+                    size="sm"
+                    className="bg-purple-700 hover:bg-purple-800 text-white border-0 transition-all duration-200 font-semibold h-10 px-6 rounded-lg text-sm shadow-[inset_0_0_0_1px_rgba(139,92,246,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_0_16px_rgba(139,92,246,0.40),inset_0_0_0_1px_rgba(139,92,246,0.55)]"
                   >
-                    Sign up
+                    Sign Up
                   </Button>
                 </Link>
               </>
@@ -168,49 +172,49 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-2 animate-fade-in">
+          <div className="md:hidden mt-3 pt-3 border-t border-white/10 flex flex-col gap-1.5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  "px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                  "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
                   pathname === link.href
-                    ? "text-emerald-400 bg-emerald-500/10 border border-emerald-400/30"
-                    : "text-white/70 hover:text-emerald-400 hover:bg-emerald-500/10"
+                    ? "text-purple-400 bg-purple-500/10 border border-purple-400/30"
+                    : "text-white/70 hover:text-purple-400 hover:bg-purple-500/10 border border-white/10"
                 )}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="flex flex-col gap-3 mt-3 pt-3 border-t border-white/10">
+            <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-white/10">
               {isAuthenticated ? (
                 <>
                   <Link href={dashboardRoute} onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 justify-start gap-2 border border-emerald-400/30 hover:border-emerald-400/50 transition-all duration-200 font-semibold bg-transparent h-11">
-                      <LayoutDashboard className="w-5 h-5" />
+                    <Button className="w-full text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 justify-start gap-2 border border-purple-400/30 transition-all font-medium bg-transparent h-10 rounded-xl text-sm">
+                      <LayoutDashboard className="w-4 h-4" />
                       Dashboard
                     </Button>
                   </Link>
                   <Button
                     onClick={() => { logout(); setMobileOpen(false); }}
-                    className="w-full text-red-400 hover:bg-red-500/10 hover:text-red-300 justify-start gap-2 border border-transparent hover:border-red-400/30 transition-all duration-200 font-semibold bg-transparent h-11"
+                    className="w-full text-red-400 hover:bg-red-500/10 hover:text-red-300 justify-start gap-2 border border-red-400/30 transition-all font-medium bg-transparent h-10 rounded-xl text-sm"
                   >
-                    <LogOut className="w-5 h-5" />
+                    <LogOut className="w-4 h-4" />
                     Logout
                   </Button>
                 </>
               ) : (
                 <>
                   <Link href={ROUTES.LOGIN} onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 border border-emerald-400/30 hover:border-emerald-400/50 transition-all duration-200 font-semibold bg-transparent h-11">
+                    <Button className="w-full text-white/80 hover:text-white border border-white/15 hover:bg-white/5 transition-all font-medium bg-transparent h-10 rounded-xl text-sm">
                       Log in
                     </Button>
                   </Link>
                   <Link href={ROUTES.REGISTER} onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-lg hover:shadow-emerald-500/50 shadow-emerald-500/30 transition-all duration-200 font-semibold h-11">
-                      Sign up
+                    <Button className="w-full bg-purple-700 hover:bg-purple-800 text-white border-0 font-semibold h-10 rounded-xl text-sm shadow-[inset_0_0_0_1px_rgba(139,92,246,0.45)] hover:shadow-[0_0_16px_rgba(139,92,246,0.35)]">
+                      Sign Up
                     </Button>
                   </Link>
                 </>
