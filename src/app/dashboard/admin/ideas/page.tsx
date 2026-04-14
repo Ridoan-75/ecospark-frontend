@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { Lightbulb, CheckCircle2, XCircle, Eye, Search } from "lucide-react";
+import { Lightbulb, CheckCircle2, XCircle, Eye, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,7 @@ export default function AdminIdeasPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [approveTarget, setApproveTarget] = useState<TIdea | null>(null);
   const [rejectTarget, setRejectTarget] = useState<TIdea | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<TIdea | null>(null);
   const [feedback, setFeedback] = useState("");
   const debouncedSearch = useDebounce(search, 400);
 
@@ -83,6 +84,18 @@ export default function AdminIdeasPage() {
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error((err?.response?.data?.message as string) || "Failed to reject");
+    },
+  });
+
+  const { mutate: deleteIdea, isPending: deleting } = useMutation({
+    mutationFn: (id: string) => ideaService.deleteIdeaAdmin(id),
+    onSuccess: () => {
+      toast.success("Idea deleted successfully ✅");
+      setDeleteTarget(null);
+      invalidate();
+    },
+    onError: (err: AxiosError<Record<string, unknown>>) => {
+      toast.error((err?.response?.data?.message as string) || "Failed to delete");
     },
   });
 
@@ -205,6 +218,15 @@ export default function AdminIdeasPage() {
                           </button>
                         </>
                       )}
+
+                      {idea.status === "APPROVED" && (
+                        <button
+                          onClick={() => setDeleteTarget(idea)}
+                          className="w-8 h-8 glass rounded-lg flex items-center justify-center text-white/40 hover:text-red-400 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -283,6 +305,18 @@ export default function AdminIdeasPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirm */}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(o) => !o && setDeleteTarget(null)}
+        title="Delete Idea"
+        description={`Delete "${deleteTarget?.title}"? This action cannot be undone. All associated data will be permanently removed.`}
+        confirmLabel="Delete"
+        onConfirm={() => deleteTarget && deleteIdea(deleteTarget.id)}
+        loading={deleting}
+        variant="destructive"
+      />
     </div>
   );
 }
