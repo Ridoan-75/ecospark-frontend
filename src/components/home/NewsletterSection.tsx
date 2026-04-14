@@ -1,12 +1,21 @@
 "use client";
-
 import { useState } from "react";
 import { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { newsletterService } from "@/services/newsletter.service";
-import { Mail, Sparkles, ArrowRight } from "lucide-react";
+import {
+  Mail,
+  Sparkles,
+  ArrowRight,
+  Shield,
+  Zap,
+  Users,
+  Leaf,        // sustainability meaning
+  Globe,       // global impact
+  Lightbulb,   // ideas/innovation
+} from "lucide-react";
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState("");
@@ -15,26 +24,20 @@ export default function NewsletterSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-
     try {
       setLoading(true);
       await newsletterService.subscribe(email);
-      toast.success("Subscribed successfully! 🌿", {
-        duration: 3000,
-      });
+      toast.success("Subscribed successfully! 🌿", { duration: 3000 });
       setEmail("");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         toast.error(
-          (error?.response?.data?.message as string) || "Something went wrong",
-          {
-            duration: 5000,
-          }
+          (error?.response?.data?.message as string) ||
+            "Something went wrong",
+          { duration: 5000 }
         );
       } else {
-        toast.error("Something went wrong", {
-          duration: 5000,
-        });
+        toast.error("Something went wrong", { duration: 5000 });
       }
     } finally {
       setLoading(false);
@@ -42,56 +45,146 @@ export default function NewsletterSection() {
   };
 
   return (
-    <section className="py-24 px-4 relative">
-      {/* Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-purple-600/10 rounded-full blur-[80px] pointer-events-none" />
+    <section className="relative py-20 px-4 md:px-8 lg:px-16 overflow-hidden">
 
-      <div className="max-w-2xl mx-auto text-center relative z-10">
-        <div className="glass gradient-border rounded-3xl p-10 md:p-14">
+      {/* BACKGROUND */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-purple-600/10 blur-[140px] rounded-full" />
 
-          {/* Icon */}
-          <div className="w-14 h-14 rounded-2xl bg-purple-500/20 flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-6 h-6 text-purple-400" />
+      <div className="max-w-6xl mx-auto relative z-10">
+
+        {/* GLASS BOX */}
+        <div className="glass gradient-border rounded-3xl p-10 md:p-14 lg:p-16">
+
+          {/* TOP */}
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 glass-purple rounded-full px-5 py-2 border border-purple-400/20 mb-6">
+              <Sparkles className="w-4 h-4 text-purple-400" />
+              <span className="text-purple-300 text-sm font-medium">
+                Stay Updated
+              </span>
+            </div>
+
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
+              Join Our{" "}
+              <span className="gradient-text">Newsletter</span>
+            </h2>
+
+            <p className="text-white/50 text-lg">
+              Get exclusive updates, sustainability ideas, and top voted
+              projects directly to your inbox.
+            </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 glass-purple rounded-full px-4 py-2 mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-            <span className="text-purple-300 text-sm font-medium">
-              Stay Updated
-            </span>
+          {/* GRID */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+            {/* LEFT */}
+            <div className="space-y-8 text-center lg:text-left">
+
+              {/* ICON GROUP (UPDATED) */}
+              <div className="flex items-center justify-center lg:justify-start gap-4">
+
+                {/* MAIN EMAIL ICON */}
+                <div className="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/20 flex items-center justify-center">
+                  <Mail className="w-7 h-7 text-purple-400" />
+                </div>
+
+                {/* EXTRA MEANINGFUL ICONS */}
+                <div className="flex gap-3">
+
+                  <div className="w-16 h-16 rounded-xl bg-green-500/10 border border-green-400/20 flex items-center justify-center">
+                    <Leaf className="w-5 h-5 text-green-400" />
+                  </div>
+
+                  <div className="w-16 h-16 rounded-xl bg-blue-500/10 border border-blue-400/20 flex items-center justify-center">
+                    <Globe className="w-5 h-5 text-blue-400" />
+                  </div>
+
+                  <div className="w-16 h-16 rounded-xl bg-yellow-500/10 border border-yellow-400/20 flex items-center justify-center">
+                    <Lightbulb className="w-5 h-5 text-yellow-400" />
+                  </div>
+
+                </div>
+              </div>
+
+              <p className="text-white/60 leading-relaxed text-lg">
+                Stay ahead with curated content designed to help you discover
+                impactful ideas and stay connected with the community.
+              </p>
+
+              {/* STATS */}
+              <div className="flex items-center gap-6 justify-center lg:justify-start">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-purple-400" />
+                  <span className="text-white/60 text-sm">
+                    2,400+ subscribers
+                  </span>
+                </div>
+
+                <div className="w-px h-4 bg-white/10" />
+
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-purple-400" />
+                  <span className="text-white/60 text-sm">
+                    Weekly updates
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT */}
+            <div className="space-y-5">
+
+              <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                {[
+                  "Top voted projects",
+                  "Sustainability tips",
+                  "Early announcements",
+                ].map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs text-purple-300/70 bg-purple-500/10 border border-purple-400/15 rounded-full px-3 py-1"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <Input
+                type="email"
+                placeholder="Enter your email..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="glass border-white/15 text-white placeholder:text-white/30 focus:border-purple-500/50 bg-transparent rounded-xl h-14 px-5"
+                required
+              />
+
+              <Button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="btn-glow w-full h-14 rounded-xl text-white font-semibold flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Subscribing...
+                  </span>
+                ) : (
+                  <>
+                    Get Free Updates
+                    <ArrowRight className="w-5 h-5" />
+                  </>
+                )}
+              </Button>
+
+              <div className="flex items-center justify-center gap-2 pt-1">
+                <Shield className="w-3.5 h-3.5 text-white/30" />
+                <p className="text-white/30 text-xs">
+                  No spam. Unsubscribe anytime.
+                </p>
+              </div>
+            </div>
           </div>
-
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Join Our{" "}
-            <span className="gradient-text">Newsletter</span>
-          </h2>
-          <p className="text-white/50 mb-8 leading-relaxed">
-            Get the latest sustainability ideas, top voted projects and
-            important announcements delivered straight to your inbox.
-          </p>
-
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-            <Input
-              type="email"
-              placeholder="Enter your email address..."
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 glass border-white/15 text-white placeholder:text-white/30 focus:border-purple-500/50 bg-transparent rounded-xl h-12"
-              required
-            />
-            <Button
-              type="submit"
-              disabled={loading}
-              className="btn-glow text-white border-0 px-6 rounded-xl h-12 gap-2 whitespace-nowrap"
-            >
-              {loading ? "Subscribing..." : "Subscribe"}
-              {!loading && <ArrowRight className="w-4 h-4" />}
-            </Button>
-          </form>
-
-          <p className="text-white/30 text-xs mt-4">
-            No spam ever. Unsubscribe anytime.
-          </p>
         </div>
       </div>
     </section>
