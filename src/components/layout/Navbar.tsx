@@ -55,7 +55,7 @@ export default function Navbar() {
           </div>
 
           {/* CENTER — Nav Links */}
-          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-3">
+          <div className="hidden md:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2 items-center gap-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
