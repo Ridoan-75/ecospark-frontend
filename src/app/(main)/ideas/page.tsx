@@ -6,6 +6,7 @@ import { Lightbulb, Sparkles } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce";
 import { ideaService } from "@/services/idea.service";
 import { QUERY_KEYS } from "@/constants/queryKeys";
+import { TIdea } from "@/types/idea.types";
 import { IDEAS_PER_PAGE } from "@/constants";
 import IdeaCard from "@/components/idea/IdeaCard";
 import IdeaFilters from "@/components/idea/IdeaFilters";
@@ -57,8 +58,8 @@ export default function AllIdeasPage() {
       }),
   });
 
-  const ideas = data?.data?.data ?? [];
-  const meta = data?.data?.meta;
+  const ideas = data?.data ?? [];
+  const meta = data?.meta;
 
   const handleFilterChange = useCallback((updates: Partial<TFilters>) => {
     setFilters((prev) => ({ ...prev, ...updates }));
@@ -120,7 +121,7 @@ export default function AllIdeasPage() {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-fade-in">
-              {ideas.map((idea) => (
+              {ideas.map((idea: TIdea) => (
                 <IdeaCard key={idea.id} idea={idea} />
               ))}
             </div>

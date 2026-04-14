@@ -34,7 +34,7 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
     queryFn: () => categoryService.getAll({ limit: 100 }),
   });
 
-  const categories = categoriesData?.data?.data ?? [];
+  const categories = categoriesData?.data ?? [];
 
   const hasActiveFilters =
     filters.searchTerm ||

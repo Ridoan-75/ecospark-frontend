@@ -31,7 +31,7 @@ export default function NewsletterTable() {
     mutationFn: (id: string) => newsletterService.deleteSubscriber(id),
     onSuccess: () => {
       toast.success("Subscriber deleted");
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_SUBSCRIBERS });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_SUBSCRIBERS, refetchType: 'active' });
       setDeleteId(null);
     },
     onError: () => toast.error("Failed to delete"),

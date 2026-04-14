@@ -37,29 +37,39 @@ export default function IdeaDetailsPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: QUERY_KEYS.IDEA(id),
     queryFn: () => ideaService.getById(id),
-    retry: false,
+    staleTime: 1000 * 30, // 30 seconds
+    retry: 3, // Retry 3 times with exponential backoff
   });
 
   const { data: accessData } = useQuery({
     queryKey: QUERY_KEYS.PAYMENT_ACCESS(id),
     queryFn: () => paymentService.checkAccess(id),
     enabled: isAuthenticated,
+    staleTime: 1000 * 5, // 5 seconds
+    retry: 2,
   });
 
   const idea = data?.data;
   const hasAccess = accessData?.data?.hasAccess ?? false;
 
-  const isAuthor = user?.id === idea?.authorId;
+  const isAuthor = user && idea && user.id === idea.authorId;
+  const isAdmin = user?.role === "ADMIN";
+  const isApproved = idea?.status === "APPROVED";
+  
+  // Can view page: Authors/Admins always, APPROVED ideas, or paid ideas (to show payment banner)
+  const canViewIdea = isAuthor || isAdmin || isApproved || idea?.isPaid;
+  
+  // Can view full content: only if not paid OR user has access
   const canViewFull =
-    !idea?.isPaid || isAuthor || hasAccess || user?.role === "ADMIN";
+    canViewIdea && (!idea?.isPaid || isAuthor || hasAccess || isAdmin);
 
-  if (isLoading) return <IdeaDetailsSkeleton />;
+  if (isLoading || !idea) return <IdeaDetailsSkeleton />;
 
-  if (isError || !idea) {
+  if (isError || (!canViewIdea && !idea?.isPaid)) {
     return (
       <div className="min-h-screen pt-28 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-white/50 mb-4">Idea not found or access denied</p>
+          <p className="text-white/50 mb-4">{!canViewIdea ? "This idea is not yet published" : "Idea not found or access denied"}</p>
           <Button
             onClick={() => router.push(ROUTES.IDEAS)}
             className="btn-glass text-white/70"

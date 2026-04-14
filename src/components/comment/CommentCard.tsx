@@ -31,7 +31,7 @@ export default function CommentCard({ comment, ideaId }: TProps) {
     onSuccess: () => {
       toast.success("Comment deleted");
       setDeleteOpen(false);
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.COMMENTS(ideaId) });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.COMMENTS(ideaId), refetchType: 'active' });
     },
     onError: () => toast.error("Failed to delete comment"),
   });

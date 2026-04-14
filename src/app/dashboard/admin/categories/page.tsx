@@ -27,10 +27,10 @@ export default function AdminCategoriesPage() {
     queryFn: () => categoryService.getAll({ limit: 100 }),
   });
 
-  const categories = data?.data?.data ?? [];
+  const categories = data?.data ?? [];
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES });
+    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES, refetchType: 'active' });
   };
 
   const { mutate: createCategory, isPending: creating } = useMutation({

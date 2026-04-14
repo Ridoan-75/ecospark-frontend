@@ -28,7 +28,7 @@ export default function EditIdeaPage() {
     mutationFn: (formData: FormData) => ideaService.update(id, formData),
     onSuccess: () => {
       toast.success("Idea updated successfully! ✅");
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS, refetchType: 'active' });
       router.push(ROUTES.MEMBER_IDEAS);
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {

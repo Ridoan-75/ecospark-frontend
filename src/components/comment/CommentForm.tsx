@@ -39,6 +39,7 @@ export default function CommentForm({
       setBody("");
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.COMMENTS(ideaId),
+        refetchType: 'all',
       });
       onSuccess?.();
     },

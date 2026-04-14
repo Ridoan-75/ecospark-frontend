@@ -42,15 +42,15 @@ export default function AdminNewsletterPage() {
       }),
   });
 
-  const subscribers = data?.data?.data?.subscribers ?? [];
-  const stats = data?.data?.data?.stats;
+  const subscribers = data?.data?.subscribers ?? [];
+  const stats = data?.data?.stats;
 
   const { mutate: deleteSubscriber, isPending: deleting } = useMutation({
     mutationFn: (id: string) => newsletterService.deleteSubscriber(id),
     onSuccess: () => {
       toast.success("Subscriber removed");
       setDeleteTarget(null);
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_SUBSCRIBERS });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_SUBSCRIBERS, refetchType: 'active' });
     },
     onError: () => toast.error("Failed to remove subscriber"),
   });

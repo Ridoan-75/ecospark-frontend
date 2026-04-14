@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,8 +23,7 @@ import {
 import ImageUpload from "@/components/shared/ImageUpload";
 import { Loader2 } from "lucide-react";
 
-const ideaSchema = z
-  .object({
+const ideaSchema = z.object({
     title: z
       .string()
       .min(5, "Title must be at least 5 characters")
@@ -39,8 +38,8 @@ const ideaSchema = z
       .string()
       .min(50, "Description must be at least 50 characters"),
     categoryId: z.string().min(1, "Please select a category"),
-    isPaid: z.boolean().default(false),
-    price: z.number().optional().nullable(),
+    isPaid: z.boolean(),
+    price: z.number().nullable(),
   })
   .refine(
     (data) => {
@@ -75,7 +74,7 @@ export default function IdeaForm({
     queryFn: () => categoryService.getAll({ limit: 100 }),
   });
 
-  const categories = categoriesData?.data?.data ?? [];
+  const categories = categoriesData?.data ?? [];
 
   const {
     register,
@@ -85,6 +84,7 @@ export default function IdeaForm({
     formState: { errors },
   } = useForm<TIdeaForm>({
     resolver: zodResolver(ideaSchema),
+    mode: 'onChange',
     defaultValues: {
       title: defaultValues?.title ?? "",
       problemStatement: defaultValues?.problemStatement ?? "",
@@ -105,12 +105,18 @@ export default function IdeaForm({
     formData.append("proposedSolution", data.proposedSolution);
     formData.append("description", data.description);
     formData.append("categoryId", data.categoryId);
-    formData.append("isPaid", String(data.isPaid));
+    formData.append("isPaid", data.isPaid ? "true" : "false");
     if (data.isPaid && data.price) {
-      formData.append("price", String(data.price));
+      formData.append("price", data.price.toString());
+    } else {
+      formData.append("price", "0");
     }
-    existingImages.forEach((url) => formData.append("images", url));
+    // Always append new images (can be empty)
     newImages.forEach((file) => formData.append("images", file));
+    // Append existing images URLs (for edit page)
+    if (defaultValues?.images) {
+      existingImages.forEach((url) => formData.append("existingImages", url));
+    }
     onSubmit(formData);
   };
 

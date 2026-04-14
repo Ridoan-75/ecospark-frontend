@@ -41,7 +41,7 @@ export default function AdminUsersPage() {
       }),
   });
 
-  const users = data?.data?.data ?? [];
+  const users = data?.data ?? [];
 
   const { mutate: updateStatus, isPending: updating } = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
@@ -51,7 +51,7 @@ export default function AdminUsersPage() {
         `User ${vars.isActive ? "activated" : "deactivated"} successfully`
       );
       setStatusTarget(null);
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error(err?.response?.data?.message || "Failed to update status");
@@ -63,7 +63,7 @@ export default function AdminUsersPage() {
       userService.updateRole(id, role),
     onSuccess: () => {
       toast.success("Role updated successfully");
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error(err?.response?.data?.message || "Failed to update role");

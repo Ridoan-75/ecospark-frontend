@@ -4,21 +4,13 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import Link from "next/link";
-import {
-  Plus,
-  Lightbulb,
-  Edit,
-  Trash2,
-  Send,
-  Eye,
-} from "lucide-react";
+import { Plus, Lightbulb, Edit, Trash2, Send, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { ROUTES } from "@/constants/routes";
 import { ideaService } from "@/services/idea.service";
 import { TIdea } from "@/types/idea.types";
 import { formatDate, formatCurrency } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import IdeaStatusBadge from "@/components/idea/IdeaStatusBadge";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
@@ -47,14 +39,14 @@ export default function MyIdeasPage() {
       }),
   });
 
-  const ideas = data?.data?.data ?? [];
+  const ideas = data?.data ?? [];
 
   const { mutate: deleteIdea, isPending: deleting } = useMutation({
     mutationFn: (id: string) => ideaService.deleteIdea(id),
     onSuccess: () => {
       toast.success("Idea deleted successfully");
       setDeleteTarget(null);
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error((err?.response?.data?.message as string) || "Failed to delete idea");
@@ -66,7 +58,7 @@ export default function MyIdeasPage() {
     onSuccess: () => {
       toast.success("Idea submitted for review!");
       setSubmitTarget(null);
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error((err?.response?.data?.message as string) || "Failed to submit idea");
@@ -143,7 +135,7 @@ export default function MyIdeasPage() {
               {ideas.map((idea) => (
                 <tr key={idea.id}>
                   <td className="p-4">
-                    <p className="text-white text-sm font-medium line-clamp-1 max-w-[200px]">
+                    <p className="text-white text-sm font-medium line-clamp-1 max-w-50">
                       {idea.title}
                     </p>
                     {idea.status === "REJECTED" && idea.rejectionFeedback && (

@@ -37,8 +37,8 @@ export default function AdminPaymentsPage() {
       }),
   });
 
-  const payments = data?.data?.data?.payments ?? [];
-  const stats = data?.data?.data?.stats;
+  const payments = data?.data?.payments ?? [];
+  const stats = data?.data?.stats;
 
   return (
     <div className="space-y-6 animate-fade-in">

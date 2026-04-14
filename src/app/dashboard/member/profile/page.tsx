@@ -47,7 +47,7 @@ export default function ProfilePage() {
     onSuccess: (res) => {
       toast.success("Profile updated successfully! ✅");
       updateUser(res.data);
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ME });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ME, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error((err?.response?.data?.message as string) || "Failed to update profile");
@@ -87,7 +87,7 @@ export default function ProfilePage() {
           <div className="relative group">
             <Avatar className="w-24 h-24 border-2 border-purple-500/30">
               <AvatarImage src={imagePreview || user?.profileImage || ""} />
-              <AvatarFallback className="bg-gradient-to-br from-purple-600 to-purple-800 text-white text-2xl font-bold">
+              <AvatarFallback className="bg-linear-to-br from-purple-600 to-purple-800 text-white text-2xl font-bold">
                 {user ? getInitials(user.name) : "?"}
               </AvatarFallback>
             </Avatar>

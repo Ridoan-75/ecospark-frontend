@@ -25,6 +25,8 @@ export default function PaymentButton({ ideaId, price }: TProps) {
     }
     try {
       setLoading(true);
+      // Store ideaId in localStorage before redirecting to Stripe
+      localStorage.setItem("purchasedIdeaId", ideaId);
       const res = await paymentService.initiate(ideaId);
       window.location.href = res.data.checkoutUrl;
     } catch (error: unknown) {

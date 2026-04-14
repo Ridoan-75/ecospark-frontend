@@ -28,8 +28,8 @@ export default function VoteButtons({ ideaId, initialUserVote }: TProps) {
   const userVote = stats?.userVote ?? initialUserVote ?? null;
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VOTE_STATS(ideaId) });
-    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.IDEA(ideaId) });
+    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.VOTE_STATS(ideaId), refetchType: 'active' });
+    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.IDEA(ideaId), refetchType: 'active' });
   };
 
   const { mutate: castVote, isPending } = useMutation({

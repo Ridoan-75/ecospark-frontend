@@ -38,7 +38,7 @@ export default function IdeaTable() {
   const ideas = data?.data?.data ?? [];
   const meta = data?.data?.meta;
 
-  const invalidate = () => qc.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_IDEAS });
+  const invalidate = () => qc.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_IDEAS, refetchType: 'active' });
 
   const { mutate: approve, isPending: approvePending } = useMutation({
     mutationFn: (id: string) => ideaService.approve(id),

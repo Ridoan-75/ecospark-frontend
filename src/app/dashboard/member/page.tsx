@@ -7,6 +7,7 @@ import { QUERY_KEYS } from "@/constants/queryKeys";
 import { ROUTES } from "@/constants/routes";
 import { ideaService } from "@/services/idea.service";
 import { useAuth } from "@/hooks/useAuth";
+import { TIdea } from "@/types/idea.types";
 import StatCard from "@/components/dashboard/StatCard";
 import IdeaCard from "@/components/idea/IdeaCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,12 +21,13 @@ export default function MemberDashboardPage() {
     queryFn: () => ideaService.getMyIdeas({ limit: 100 }),
   });
 
-  const ideas = myIdeasData?.data?.data ?? [];
+  // ── Fix: response structure সঠিকভাবে read করো ──
+  const ideas = myIdeasData?.data ?? [];
   const total = ideas.length;
-  const approved = ideas.filter((i) => i.status === "APPROVED").length;
-  const pending = ideas.filter((i) => i.status === "UNDER_REVIEW").length;
-  const draft = ideas.filter((i) => i.status === "DRAFT").length;
-  const rejected = ideas.filter((i) => i.status === "REJECTED").length;
+  const approved = ideas.filter((i: TIdea) => i.status === "APPROVED").length;
+  const pending = ideas.filter((i: TIdea) => i.status === "UNDER_REVIEW").length;
+  const draft = ideas.filter((i: TIdea) => i.status === "DRAFT").length;
+  const rejected = ideas.filter((i: TIdea) => i.status === "REJECTED").length;
   const recentIdeas = ideas.slice(0, 3);
 
   return (
@@ -41,7 +43,7 @@ export default function MemberDashboardPage() {
           👋
         </h1>
         <p className="text-white/40 text-sm mt-1">
-          Here's an overview of your sustainability ideas
+          Here&apos;s an overview of your sustainability ideas
         </p>
       </div>
 
@@ -120,7 +122,7 @@ export default function MemberDashboardPage() {
           <div className="glass gradient-border rounded-2xl p-10 text-center">
             <Lightbulb className="w-10 h-10 text-purple-400/50 mx-auto mb-3" />
             <p className="text-white/50 text-sm mb-4">
-              You haven't created any ideas yet
+              You haven&apos;t created any ideas yet
             </p>
             <Link href={ROUTES.MEMBER_CREATE_IDEA}>
               <Button className="btn-glow text-white border-0 gap-2 rounded-xl">
@@ -131,7 +133,7 @@ export default function MemberDashboardPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {recentIdeas.map((idea) => (
+            {recentIdeas.map((idea: TIdea) => (
               <IdeaCard key={idea.id} idea={idea} showStatus />
             ))}
           </div>
@@ -143,31 +145,14 @@ export default function MemberDashboardPage() {
         <h2 className="text-white font-semibold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
-            {
-              label: "Create New Idea",
-              href: ROUTES.MEMBER_CREATE_IDEA,
-              icon: Plus,
-              color: "btn-glow",
-            },
-            {
-              label: "Browse All Ideas",
-              href: ROUTES.IDEAS,
-              icon: Lightbulb,
-              color: "btn-glass",
-            },
-            {
-              label: "My Payments",
-              href: ROUTES.MEMBER_PAYMENTS,
-              icon: CreditCard,
-              color: "btn-glass",
-            },
+            { label: "Create New Idea", href: ROUTES.MEMBER_CREATE_IDEA, icon: Plus, color: "btn-glow" },
+            { label: "Browse All Ideas", href: ROUTES.IDEAS, icon: Lightbulb, color: "btn-glass" },
+            { label: "My Payments", href: ROUTES.MEMBER_PAYMENTS, icon: CreditCard, color: "btn-glass" },
           ].map((action) => {
             const Icon = action.icon;
             return (
               <Link key={action.href} href={action.href}>
-                <button
-                  className={`w-full ${action.color} text-white rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2 transition-all`}
-                >
+                <button className={`w-full ${action.color} text-white rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2 transition-all`}>
                   <Icon className="w-4 h-4" />
                   {action.label}
                 </button>

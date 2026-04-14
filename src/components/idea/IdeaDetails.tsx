@@ -27,10 +27,16 @@ export default function IdeaDetails({ idea }: TProps) {
     enabled: isAuthenticated && idea.isPaid,
   });
 
-  const isAuthor = user?.id === idea.authorId;
+  const isAuthor = user && idea && user.id === idea.authorId;
   const isAdmin = user?.role === "ADMIN";
+  const isApproved = idea.status === "APPROVED";
   const hasAccess = accessData?.data?.hasAccess ?? false;
-  const canViewFull = !idea.isPaid || isAuthor || hasAccess || isAdmin;
+  
+  // Can view page: Authors/Admins always, APPROVED ideas, or paid ideas (to show payment banner)
+  const canViewIdea = isAuthor || isAdmin || isApproved || idea.isPaid;
+  
+  // Can view full content: only if not paid OR user has access
+  const canViewFull = canViewIdea && (!idea.isPaid || isAuthor || hasAccess || isAdmin);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

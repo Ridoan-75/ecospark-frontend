@@ -39,7 +39,7 @@ export default function UserTable() {
   const { mutate: updateStatus, isPending: statusPending } = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
       userService.updateStatus(id, isActive),
-    onSuccess: () => { toast.success("Status updated"); qc.invalidateQueries({ queryKey: QUERY_KEYS.USERS }); setConfirm(null); },
+    onSuccess: () => { toast.success("Status updated"); qc.invalidateQueries({ queryKey: QUERY_KEYS.USERS, refetchType: 'active' }); setConfirm(null); },
     onError: (e: unknown) => {
       let msg = "Failed";
       if (e instanceof Object && 'response' in e) {
@@ -58,7 +58,7 @@ export default function UserTable() {
   const { mutate: updateRole, isPending: rolePending } = useMutation({
     mutationFn: ({ id, role }: { id: string; role: "MEMBER" | "ADMIN" }) =>
       userService.updateRole(id, role),
-    onSuccess: () => { toast.success("Role updated"); qc.invalidateQueries({ queryKey: QUERY_KEYS.USERS }); setConfirm(null); },
+    onSuccess: () => { toast.success("Role updated"); qc.invalidateQueries({ queryKey: QUERY_KEYS.USERS, refetchType: 'active' }); setConfirm(null); },
     onError: (e: unknown) => {
       let msg = "Failed";
       if (e instanceof Object && 'response' in e) {

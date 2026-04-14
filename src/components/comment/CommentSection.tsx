@@ -17,8 +17,8 @@ export default function CommentSection({ ideaId }: TProps) {
     queryFn: () => commentService.getByIdeaId(ideaId, { limit: 50 }),
   });
 
-  const comments = data?.data?.data ?? [];
-  const total = data?.data?.meta?.total ?? 0;
+  const comments = data?.data ?? [];
+  const total = data?.meta?.total ?? 0;
 
   return (
     <div>
@@ -66,7 +66,7 @@ export default function CommentSection({ ideaId }: TProps) {
         />
       ) : (
         <div className="space-y-4">
-          {comments.map((comment) => (
+          {comments.map((comment: any) => (
             <CommentCard
               key={comment.id}
               comment={comment}

@@ -2,14 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
-  Users,
-  Lightbulb,
-  CreditCard,
-  TrendingUp,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  ArrowRight,
+  Users, Lightbulb, CreditCard, TrendingUp,
+  Clock, CheckCircle2, XCircle, ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import { QUERY_KEYS } from "@/constants/queryKeys";
@@ -22,6 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import IdeaStatusBadge from "@/components/idea/IdeaStatusBadge";
+import { TUser } from "@/types/user.types";
+import { TIdea } from "@/types/idea.types";
 
 export default function AdminDashboardPage() {
 
@@ -42,24 +38,27 @@ export default function AdminDashboardPage() {
 
   const isLoading = usersLoading || ideasLoading || paymentsLoading;
 
-  const totalUsers = usersData?.data?.meta?.total ?? 0;
-  const activeUsers = usersData?.data?.data?.filter((u) => u.isActive).length ?? 0;
+  // ── Users ──────────────────────────────────────────
+  const totalUsers = usersData?.meta?.total ?? 0;
+  const activeUsers = usersData?.data?.filter((u: TUser) => u.isActive).length ?? 0;
 
-  const ideas = ideasData?.data?.data ?? [];
-  const totalIdeas = ideasData?.data?.meta?.total ?? 0;
-  const underReview = ideas.filter((i) => i.status === "UNDER_REVIEW").length;
-  const approved = ideas.filter((i) => i.status === "APPROVED").length;
-  const recentIdeas = ideas
-    .filter((i) => i.status === "UNDER_REVIEW")
+  // ── Ideas ──────────────────────────────────────────
+  const ideas = ideasData?.data ?? [];
+  const totalIdeas = ideasData?.meta?.total ?? 0;
+  const underReview = ideas.filter((i: TIdea) => i.status === "UNDER_REVIEW").length;
+  const approved = ideas.filter((i: TIdea) => i.status === "APPROVED").length;
+  const recentPending = ideas
+    .filter((i: TIdea) => i.status === "UNDER_REVIEW")
     .slice(0, 5);
 
-  const totalRevenue = paymentsData?.data?.data?.stats?.totalRevenue ?? 0;
-  const totalPayments = paymentsData?.data?.data?.stats?.totalSuccessfulPayments ?? 0;
+  // ── Payments ───────────────────────────────────────
+  const paymentsResult = paymentsData?.data?.data;
+  const totalRevenue = paymentsResult?.stats?.totalRevenue ?? 0;
+  const totalPayments = paymentsResult?.stats?.totalSuccessfulPayments ?? 0;
 
   return (
     <div className="space-y-8 animate-fade-in">
 
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white">
           Admin <span className="gradient-text-purple">Overview</span>
@@ -69,7 +68,7 @@ export default function AdminDashboardPage() {
         </p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats */}
       {isLoading ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -144,7 +143,7 @@ export default function AdminDashboardPage() {
               </div>
             ))}
           </div>
-        ) : recentIdeas.length === 0 ? (
+        ) : recentPending.length === 0 ? (
           <div className="glass gradient-border rounded-2xl p-8 text-center">
             <CheckCircle2 className="w-10 h-10 text-green-400/50 mx-auto mb-3" />
             <p className="text-white/50 text-sm">
@@ -164,7 +163,7 @@ export default function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {recentIdeas.map((idea) => (
+                {recentPending.map((idea: TIdea) => (
                   <tr key={idea.id}>
                     <td className="p-4">
                       <p className="text-white text-sm font-medium line-clamp-1">
@@ -176,24 +175,24 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="p-4 hidden md:table-cell">
                       <span className="text-white/50 text-sm">
-                        {idea.author.name}
+                        {idea.author?.name}
                       </span>
                     </td>
                     <td className="p-4 hidden md:table-cell">
                       <span className="badge-purple rounded-full px-2.5 py-1 text-xs">
-                        {idea.category.name}
+                        {idea.category?.name}
                       </span>
                     </td>
                     <td className="p-4">
                       <IdeaStatusBadge status={idea.status} />
                     </td>
                     <td className="p-4">
-                      <Link href={ROUTES.IDEA_DETAILS(idea.id)}>
+                      <Link href={ROUTES.ADMIN_IDEAS}>
                         <Button
                           variant="ghost"
                           className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 text-xs h-8 px-3 rounded-lg"
                         >
-                          Review
+                          Review →
                         </Button>
                       </Link>
                     </td>
@@ -205,23 +204,23 @@ export default function AdminDashboardPage() {
         )}
       </div>
 
-      {/* Quick Links */}
+      {/* Quick Actions */}
       <div>
         <h2 className="text-white font-semibold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
-            { label: "Manage Users", href: ROUTES.ADMIN_USERS, icon: Users, color: "purple" },
-            { label: "Review Ideas", href: ROUTES.ADMIN_IDEAS, icon: Lightbulb, color: "amber" },
-            { label: "Categories", href: ROUTES.ADMIN_CATEGORIES, icon: CheckCircle2, color: "green" },
-            { label: "Payments", href: ROUTES.ADMIN_PAYMENTS, icon: CreditCard, color: "blue" },
-            { label: "Newsletter", href: ROUTES.ADMIN_NEWSLETTER, icon: XCircle, color: "red" },
+            { label: "Manage Users", href: ROUTES.ADMIN_USERS, icon: Users },
+            { label: "Review Ideas", href: ROUTES.ADMIN_IDEAS, icon: Lightbulb },
+            { label: "Categories", href: ROUTES.ADMIN_CATEGORIES, icon: CheckCircle2 },
+            { label: "Payments", href: ROUTES.ADMIN_PAYMENTS, icon: CreditCard },
+            { label: "Newsletter", href: ROUTES.ADMIN_NEWSLETTER, icon: XCircle },
           ].map((action) => {
             const Icon = action.icon;
             return (
               <Link key={action.href} href={action.href}>
                 <div className="glass glass-hover gradient-border rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-${action.color}-500/15`}>
-                    <Icon className={`w-4 h-4 text-${action.color}-400`} />
+                  <div className="w-8 h-8 rounded-lg glass-purple flex items-center justify-center">
+                    <Icon className="w-4 h-4 text-purple-400" />
                   </div>
                   <span className="text-white/70 text-sm font-medium">
                     {action.label}

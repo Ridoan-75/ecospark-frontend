@@ -1,15 +1,13 @@
 import axiosInstance from "@/lib/axios";
-import { TApiResponse, TMeta } from "@/types/common.types";
+import { TApiResponse } from "@/types/common.types";
 import { TCategory } from "@/types/idea.types";
-
-type TCategoriesResponse = { data: TCategory[]; meta: TMeta };
 
 const getAll = async (params?: { page?: number; limit?: number; searchTerm?: string }) => {
   const query = new URLSearchParams();
   if (params?.page) query.append("page", String(params.page));
   if (params?.limit) query.append("limit", String(params.limit));
   if (params?.searchTerm) query.append("searchTerm", params.searchTerm);
-  const res = await axiosInstance.get<TApiResponse<TCategoriesResponse>>(
+  const res = await axiosInstance.get<TApiResponse<TCategory[]>>(
     `/categories?${query.toString()}`
   );
   return res.data;

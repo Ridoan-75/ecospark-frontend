@@ -26,8 +26,8 @@ export default function CategoryTable() {
     queryFn: () => categoryService.getAll({ limit: 100 }),
   });
 
-  const categories = data?.data?.data ?? [];
-  const invalidate = () => qc.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES });
+  const categories = data?.data ?? [];
+  const invalidate = () => qc.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES, refetchType: 'active' });
 
   const { mutate: create, isPending: creating } = useMutation({
     mutationFn: () => categoryService.create(newName.trim()),

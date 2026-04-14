@@ -40,7 +40,6 @@ export default function AdminIdeasPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [approveTarget, setApproveTarget] = useState<TIdea | null>(null);
   const [rejectTarget, setRejectTarget] = useState<TIdea | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<TIdea | null>(null);
   const [feedback, setFeedback] = useState("");
   const debouncedSearch = useDebounce(search, 400);
 
@@ -54,10 +53,11 @@ export default function AdminIdeasPage() {
       }),
   });
 
-  const ideas = data?.data?.data ?? [];
+  const ideas = data?.data ?? [];
+
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_IDEAS });
+    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_IDEAS, refetchType: 'active' });
   };
 
   const { mutate: approveIdea, isPending: approving } = useMutation({
@@ -83,18 +83,6 @@ export default function AdminIdeasPage() {
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error((err?.response?.data?.message as string) || "Failed to reject");
-    },
-  });
-
-  const { mutate: deleteIdea, isPending: deleting } = useMutation({
-    mutationFn: (id: string) => ideaService.deleteIdeaAdmin(id),
-    onSuccess: () => {
-      toast.success("Idea deleted");
-      setDeleteTarget(null);
-      invalidate();
-    },
-    onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error((err?.response?.data?.message as string) || "Failed to delete");
     },
   });
 
@@ -163,10 +151,10 @@ export default function AdminIdeasPage() {
               </tr>
             </thead>
             <tbody>
-              {ideas.map((idea) => (
+              {ideas.map((idea: TIdea) => (
                 <tr key={idea.id}>
                   <td className="p-4">
-                    <p className="text-white text-sm font-medium line-clamp-1 max-w-[180px]">
+                    <p className="text-white text-sm font-medium line-clamp-1 max-w-45">
                       {idea.title}
                     </p>
                     {idea.isPaid && (

@@ -1,8 +1,7 @@
 import axiosInstance from "@/lib/axios";
-import { TApiResponse, TMeta } from "@/types/common.types";
+import { TApiResponse } from "@/types/common.types";
 import { TUser } from "@/types/user.types";
 
-type TUsersResponse = { data: TUser[]; meta: TMeta };
 type TUserFilters = {
   page?: number;
   limit?: number;
@@ -19,7 +18,7 @@ const getAll = async (filters?: TUserFilters) => {
   if (filters?.role) params.append("role", filters.role);
   if (filters?.isActive !== undefined)
     params.append("isActive", String(filters.isActive));
-  const res = await axiosInstance.get<TApiResponse<TUsersResponse>>(
+  const res = await axiosInstance.get<TApiResponse<TUser[]>>(
     `/users?${params.toString()}`
   );
   return res.data;
