@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
@@ -24,20 +25,36 @@ export default function ReplyCard({ reply, ideaId }: TProps) {
   const { mutate: deleteReply, isPending: deleting } = useMutation({
     mutationFn: () => commentService.deleteComment(reply.id),
     onSuccess: () => {
-      toast.success("Reply deleted");
+      toast.success("Reply deleted", {
+        duration: 3000,
+      });
       setDeleteOpen(false);
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.COMMENTS(ideaId), refetchType: 'active' });
     },
-    onError: () => toast.error("Failed to delete reply"),
+    onError: () => toast.error("Failed to delete reply", {
+      duration: 5000,
+    }),
   });
 
   return (
     <div className="glass-purple rounded-lg p-3">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-700 to-purple-900 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-            {getInitials(reply.author.name)}
-          </div>
+          {reply.author.profileImage ? (
+            <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
+              <Image
+                src={reply.author.profileImage}
+                alt={reply.author.name}
+                width={24}
+                height={24}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-700 to-purple-900 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+              {getInitials(reply.author.name)}
+            </div>
+          )}
           <div>
             <p className="text-white/70 text-xs font-medium">
               {reply.author.name}

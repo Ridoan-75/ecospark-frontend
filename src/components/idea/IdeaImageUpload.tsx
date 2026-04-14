@@ -29,7 +29,9 @@ export default function IdeaImageUpload({
   const onDrop = useCallback(
     (accepted: File[]) => {
       if (total + accepted.length > maxFiles) {
-        toast.error(`Maximum ${maxFiles} images allowed`);
+        toast.error(`Maximum ${maxFiles} images allowed`, {
+          duration: 4000,
+        });
         const allowed = accepted.slice(0, maxFiles - total);
         if (allowed.length > 0) onChange([...files, ...allowed]);
         return;

@@ -11,10 +11,11 @@ import {
   Tag,
   CreditCard,
   Mail,
-  Leaf,
   ChevronRight,
   Shield,
+  Leaf,
 } from "lucide-react";
+import Logo from "@/components/shared/Logo";
 
 const adminLinks = [
   {
@@ -68,17 +69,7 @@ export default function AdminSidebar() {
 
       {/* Logo */}
       <div className="p-6 border-b border-white/8">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
-            <Leaf className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <p className="text-white font-bold text-base leading-none">
-              Eco<span className="gradient-text-purple">Spark</span>
-            </p>
-            <p className="text-white/30 text-[10px] mt-0.5">Admin Panel</p>
-          </div>
-        </Link>
+        <Logo variant="full" showSubtitle={true} subtitle="Admin Panel" />
       </div>
 
       {/* Admin Badge */}

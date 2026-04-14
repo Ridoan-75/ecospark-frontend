@@ -171,7 +171,7 @@ export default function IdeaDetails({ idea }: TProps) {
         </div>
         <div className="glass gradient-border rounded-2xl p-5">
           <Button
-            onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("Link copied!"); }}
+            onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("Link copied!", { duration: 2000 }); }}
             className="w-full btn-glass text-white/60 hover:text-white rounded-xl gap-2 text-sm h-9"
           >
             <Share2 className="w-3.5 h-3.5" /> Copy Link

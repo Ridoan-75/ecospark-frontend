@@ -71,7 +71,7 @@ export default function AdminOverview() {
     {
       icon: CreditCard,
       label: "Total Payments",
-      value: paymentsData?.data?.data?.stats?.totalSuccessfulPayments ?? 0,
+      value: paymentsData?.data?.data?.data?.stats?.totalSuccessfulPayments ?? 0,
       color: "text-emerald-400",
       bg: "bg-emerald-500/15",
       loading: paymentsLoading,
@@ -79,7 +79,7 @@ export default function AdminOverview() {
     {
       icon: TrendingUp,
       label: "Total Revenue",
-      value: formatCurrency(paymentsData?.data?.data?.stats?.totalRevenue ?? 0),
+      value: formatCurrency(paymentsData?.data?.data?.data?.stats?.totalRevenue ?? 0),
       color: "text-green-400",
       bg: "bg-green-500/15",
       loading: paymentsLoading,

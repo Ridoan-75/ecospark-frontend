@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import {
   Eye,
   EyeOff,
-  Leaf,
   Lock,
   Mail,
   User,
@@ -24,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { authService } from "@/services/auth.service";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants/routes";
+import Logo from "@/components/shared/Logo";
 
 const registerSchema = z
   .object({
@@ -93,12 +93,17 @@ export default function RegisterPage() {
         password: data.password,
       });
       setAuth(res.data.user, res.data.token);
-      toast.success(`Welcome to EcoSpark, ${res.data.user.name.split(" ")[0]}! 🌿`);
+      toast.success(`Welcome to EcoSpark, ${res.data.user.name.split(" ")[0]}! 🌿`, {
+        duration: 3000,
+      });
       router.push(ROUTES.MEMBER_DASHBOARD);
     } catch (error: unknown) {
       const err = error as {response?: {data?: {message?: string}}};
       toast.error(
-        err?.response?.data?.message || "Registration failed. Please try again."
+        err?.response?.data?.message || "Registration failed. Please try again.",
+        {
+          duration: 5000,
+        }
       );
     } finally {
       setLoading(false);
@@ -110,14 +115,9 @@ export default function RegisterPage() {
 
       {/* Logo */}
       <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
-            <Leaf className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-white font-bold text-xl">
-            Eco<span className="gradient-text-purple">Spark</span>
-          </span>
-        </Link>
+        <div className="flex justify-center mb-6">
+          <Logo variant="compact" />
+        </div>
 
         <div className="inline-flex items-center gap-2 glass-purple rounded-full px-4 py-1.5 mb-4">
           <Sparkles className="w-3.5 h-3.5 text-purple-400" />

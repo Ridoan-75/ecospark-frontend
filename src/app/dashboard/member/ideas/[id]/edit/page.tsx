@@ -27,12 +27,16 @@ export default function EditIdeaPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: (formData: FormData) => ideaService.update(id, formData),
     onSuccess: () => {
-      toast.success("Idea updated successfully! ✅");
+      toast.success("Idea updated successfully! ✅", {
+        duration: 3000,
+      });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS, refetchType: 'active' });
       router.push(ROUTES.MEMBER_IDEAS);
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error((err?.response?.data?.message as string) || "Failed to update idea");
+      toast.error((err?.response?.data?.message as string) || "Failed to update idea", {
+        duration: 5000,
+      });
     },
   });
 

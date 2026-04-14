@@ -16,11 +16,15 @@ export default function CreateIdeaPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: (formData: FormData) => ideaService.create(formData),
     onSuccess: () => {
-      toast.success("Idea created as draft! 🌿");
+      toast.success("Idea created as draft! 🌿", {
+        duration: 3000,
+      });
       router.push(ROUTES.MEMBER_IDEAS);
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error((err?.response?.data?.message as string) || "Failed to create idea");
+      toast.error((err?.response?.data?.message as string) || "Failed to create idea", {
+        duration: 5000,
+      });
     },
   });
 

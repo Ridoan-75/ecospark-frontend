@@ -16,14 +16,22 @@ export default function PaymentSuccessPage() {
   const router = useRouter();
   const sessionId = searchParams.get("session_id");
   const [purchasedIdeaId, setPurchasedIdeaId] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(5);
+  const [redirecting, setRedirecting] = useState(false);
 
+  // Retrieve ideaId from storage on mount
   useEffect(() => {
-    if (!isAuthenticated) router.push(ROUTES.LOGIN);
-    // Get ideaId from localStorage as fallback
-    const storedIdeaId = localStorage.getItem("purchasedIdeaId");
+    if (!isAuthenticated) {
+      router.push(ROUTES.LOGIN);
+      return;
+    }
+    
+    const storedIdeaId = sessionStorage.getItem("purchasedIdeaId") || localStorage.getItem("purchasedIdeaId");
+    console.log(`[Payment Success] Retrieved ideaId from storage:`, storedIdeaId);
     setPurchasedIdeaId(storedIdeaId);
   }, [isAuthenticated, router]);
 
+  // Verify payment with Stripe
   const { data, isLoading } = useQuery({
     queryKey: ["payment-verify", sessionId],
     queryFn: () => paymentService.verify(sessionId!),
@@ -31,25 +39,50 @@ export default function PaymentSuccessPage() {
   });
 
   const payment = data?.data?.payment;
-  const [countdown, setCountdown] = useState(3);
 
-  // Auto-redirect to idea after 3 seconds
+  // Redirect to idea page
   useEffect(() => {
-    if (payment?.ideaId && !isLoading) {
+    // Use ideaId from payment response first, then fall back to stored ideaId
+    const ideaIdToUse = payment?.ideaId || purchasedIdeaId;
+
+    if (ideaIdToUse && !redirecting) {
+      setRedirecting(true);
+      console.log(`[Payment Success] Starting redirect to idea ${ideaIdToUse}`);
+      
       const timer = setInterval(() => {
         setCountdown((prev) => prev - 1);
       }, 1000);
 
+      // Wait 5 seconds to let user see success message, then redirect
       const redirectTimer = setTimeout(() => {
-        router.push(ROUTES.IDEA_DETAILS(payment.ideaId));
-      }, 3000);
+        console.log(`[Payment Success] Executing redirect to: ${ROUTES.IDEA_DETAILS(ideaIdToUse)}`);
+        localStorage.removeItem("purchasedIdeaId");
+        sessionStorage.removeItem("purchasedIdeaId");
+        router.push(ROUTES.IDEA_DETAILS(ideaIdToUse));
+      }, 5000);
 
       return () => {
         clearInterval(timer);
         clearTimeout(redirectTimer);
       };
     }
-  }, [payment, isLoading, router]);
+  }, [payment?.ideaId, purchasedIdeaId, redirecting, router]);
+
+  // Fallback redirect if no ideaId found after a delay
+  useEffect(() => {
+    if (!isLoading && !payment?.ideaId && !purchasedIdeaId && !redirecting) {
+      console.warn(`[Payment Success] No ideaId found after query completed`);
+      console.log(`[Payment Success] payment?.ideaId:`, payment?.ideaId);
+      console.log(`[Payment Success] purchasedIdeaId:`, purchasedIdeaId);
+      
+      const timer = setTimeout(() => {
+        console.warn(`[Payment Success] Falling back to home page`);
+        router.push(ROUTES.HOME);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, payment?.ideaId, purchasedIdeaId, redirecting, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -79,14 +112,14 @@ export default function PaymentSuccessPage() {
                 </p>
               </div>
             )}
-            {payment?.ideaId && (
+            {(payment?.ideaId || purchasedIdeaId) && (
               <p className="text-white/40 text-xs mb-4">
                 Redirecting to idea in {countdown}s...
               </p>
             )}
             <div className="flex flex-col gap-3">
-              {payment?.ideaId && (
-                <Link href={ROUTES.IDEA_DETAILS(payment.ideaId)}>
+              {(payment?.ideaId || purchasedIdeaId) && (
+                <Link href={ROUTES.IDEA_DETAILS(payment?.ideaId || purchasedIdeaId!)}>
                   <Button className="w-full btn-glow text-white border-0 rounded-xl gap-2">
                     View Idea Now
                     <ArrowRight className="w-4 h-4" />

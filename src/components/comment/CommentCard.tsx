@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { MessageSquare, Trash2, ChevronDown, ChevronUp } from "lucide-react";
@@ -29,11 +30,15 @@ export default function CommentCard({ comment, ideaId }: TProps) {
   const { mutate: deleteComment, isPending: deleting } = useMutation({
     mutationFn: () => commentService.deleteComment(comment.id),
     onSuccess: () => {
-      toast.success("Comment deleted");
+      toast.success("Comment deleted", {
+        duration: 3000,
+      });
       setDeleteOpen(false);
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.COMMENTS(ideaId), refetchType: 'active' });
     },
-    onError: () => toast.error("Failed to delete comment"),
+    onError: () => toast.error("Failed to delete comment", {
+      duration: 5000,
+    }),
   });
 
   return (
@@ -41,9 +46,21 @@ export default function CommentCard({ comment, ideaId }: TProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-xs font-bold shrink-0">
-            {getInitials(comment.author.name)}
-          </div>
+          {comment.author.profileImage ? (
+            <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+              <Image
+                src={comment.author.profileImage}
+                alt={comment.author.name}
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-xs font-bold shrink-0">
+              {getInitials(comment.author.name)}
+            </div>
+          )}
           <div>
             <p className="text-white/80 text-sm font-medium">
               {comment.author.name}

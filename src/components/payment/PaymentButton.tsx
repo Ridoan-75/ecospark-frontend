@@ -19,15 +19,20 @@ export default function PaymentButton({ ideaId, price }: TProps) {
 
   const handlePayment = async () => {
     if (!isAuthenticated) {
-      toast.error("Please login to purchase this idea");
+      toast.error("Please login to purchase this idea", {
+        duration: 4000,
+      });
       router.push(ROUTES.LOGIN);
       return;
     }
     try {
       setLoading(true);
-      // Store ideaId in localStorage before redirecting to Stripe
+      // Store ideaId in both localStorage and sessionStorage for redundancy
+      console.log(`[Payment Button] Storing ideaId in storage: ${ideaId}`);
       localStorage.setItem("purchasedIdeaId", ideaId);
+      sessionStorage.setItem("purchasedIdeaId", ideaId);
       const res = await paymentService.initiate(ideaId);
+      console.log(`[Payment Button] Redirecting to Stripe checkout URL`);
       window.location.href = res.data.checkoutUrl;
     } catch (error: unknown) {
       let errorMessage = "Payment initiation failed";
@@ -40,7 +45,9 @@ export default function PaymentButton({ ideaId, price }: TProps) {
           }
         }
       }
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }

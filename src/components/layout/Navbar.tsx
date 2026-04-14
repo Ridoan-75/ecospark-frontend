@@ -12,7 +12,6 @@ import {
   LogOut,
   Menu,
   X,
-  Leaf,
   User,
   ChevronDown,
 } from "lucide-react";
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
+import Logo from "@/components/shared/Logo";
 
 const navLinks = [
   { label: "Home", href: ROUTES.HOME },
@@ -48,14 +48,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-purple-gradient flex items-center justify-center glow-purple-sm">
-              <Leaf className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-white font-bold text-lg tracking-tight">
-              Eco<span className="gradient-text-purple">Spark</span>
-            </span>
-          </Link>
+          <Logo variant="compact" />
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-1">

@@ -23,7 +23,9 @@ export default function DashboardHeader() {
 
   const handleLogout = () => {
     logout();
-    toast.success("Logged out successfully");
+    toast.success("Logged out successfully", {
+      duration: 3000,
+    });
     router.push(ROUTES.LOGIN);
   };
 

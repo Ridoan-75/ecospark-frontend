@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Leaf, LogOut, LayoutDashboard, User, Home, Lightbulb, Info } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard, User, Home, Lightbulb, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants/routes";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Logo from "@/components/shared/Logo";
 
 const navLinks = [
   { label: "Home", href: ROUTES.HOME, icon: Home },
@@ -46,14 +47,7 @@ export default function MobileNav() {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-5 border-b border-white/8 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center">
-                <Leaf className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-white font-bold">
-                Eco<span className="gradient-text-purple">Spark</span>
-              </span>
-            </div>
+            <Logo variant="compact" />
           </div>
 
           {/* User Info */}

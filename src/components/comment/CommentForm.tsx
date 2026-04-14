@@ -35,7 +35,9 @@ export default function CommentForm({
   const { mutate, isPending } = useMutation({
     mutationFn: () => commentService.create({ body, ideaId, parentId }),
     onSuccess: () => {
-      toast.success(parentId ? "Reply added!" : "Comment added!");
+      toast.success(parentId ? "Reply added!" : "Comment added!", {
+        duration: 3000,
+      });
       setBody("");
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.COMMENTS(ideaId),
@@ -54,18 +56,24 @@ export default function CommentForm({
           }
         }
       }
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        duration: 5000,
+      });
     },
   });
 
   const handleSubmit = () => {
     if (!isAuthenticated) {
-      toast.error("Please login to comment");
+      toast.error("Please login to comment", {
+        duration: 4000,
+      });
       router.push(ROUTES.LOGIN);
       return;
     }
     if (!body.trim()) {
-      toast.error("Comment cannot be empty");
+      toast.error("Comment cannot be empty", {
+        duration: 3000,
+      });
       return;
     }
     mutate();

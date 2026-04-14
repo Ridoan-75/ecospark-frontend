@@ -7,13 +7,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Eye, EyeOff, Leaf, Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authService } from "@/services/auth.service";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants/routes";
+import Logo from "@/components/shared/Logo";
 
 const loginSchema = z.object({
   email: z
@@ -45,7 +46,9 @@ export default function LoginPage() {
       setLoading(true);
       const res = await authService.login(data);
       setAuth(res.data.user, res.data.token);
-      toast.success(`Welcome back, ${res.data.user.name.split(" ")[0]}! 🌿`);
+      toast.success(`Welcome back, ${res.data.user.name.split(" ")[0]}! 🌿`, {
+        duration: 3000,
+      });
 
       // Role based redirect
       if (res.data.user.role === "ADMIN") {
@@ -56,7 +59,10 @@ export default function LoginPage() {
     } catch (error: unknown) {
       const err = error as {response?: {data?: {message?: string}}};
       toast.error(
-        err?.response?.data?.message || "Invalid email or password"
+        err?.response?.data?.message || "Invalid email or password",
+        {
+          duration: 5000,
+        }
       );
     } finally {
       setLoading(false);
@@ -68,14 +74,9 @@ export default function LoginPage() {
 
       {/* Logo */}
       <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
-            <Leaf className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-white font-bold text-xl">
-            Eco<span className="gradient-text-purple">Spark</span>
-          </span>
-        </Link>
+        <div className="flex justify-center mb-6">
+          <Logo variant="compact" />
+        </div>
 
         <div className="inline-flex items-center gap-2 glass-purple rounded-full px-4 py-1.5 mb-4">
           <Sparkles className="w-3.5 h-3.5 text-purple-400" />

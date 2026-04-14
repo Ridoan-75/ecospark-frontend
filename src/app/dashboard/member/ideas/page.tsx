@@ -44,24 +44,32 @@ export default function MyIdeasPage() {
   const { mutate: deleteIdea, isPending: deleting } = useMutation({
     mutationFn: (id: string) => ideaService.deleteIdea(id),
     onSuccess: () => {
-      toast.success("Idea deleted successfully");
+      toast.success("Idea deleted successfully", {
+        duration: 3000,
+      });
       setDeleteTarget(null);
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error((err?.response?.data?.message as string) || "Failed to delete idea");
+      toast.error((err?.response?.data?.message as string) || "Failed to delete idea", {
+        duration: 5000,
+      });
     },
   });
 
   const { mutate: submitIdea, isPending: submitting } = useMutation({
     mutationFn: (id: string) => ideaService.submit(id),
     onSuccess: () => {
-      toast.success("Idea submitted for review!");
+      toast.success("Idea submitted for review!", {
+        duration: 3000,
+      });
       setSubmitTarget(null);
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error((err?.response?.data?.message as string) || "Failed to submit idea");
+      toast.error((err?.response?.data?.message as string) || "Failed to submit idea", {
+        duration: 5000,
+      });
     },
   });
 

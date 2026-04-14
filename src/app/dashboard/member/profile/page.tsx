@@ -45,12 +45,16 @@ export default function ProfilePage() {
   const { mutate, isPending } = useMutation({
     mutationFn: (formData: FormData) => userService.updateMyProfile(formData),
     onSuccess: (res) => {
-      toast.success("Profile updated successfully! ✅");
+      toast.success("Profile updated successfully! ✅", {
+        duration: 3000,
+      });
       updateUser(res.data);
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ME, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error((err?.response?.data?.message as string) || "Failed to update profile");
+      toast.error((err?.response?.data?.message as string) || "Failed to update profile", {
+        duration: 5000,
+      });
     },
   });
 
@@ -65,7 +69,9 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be less than 5MB");
+      toast.error("Image must be less than 5MB", {
+        duration: 4000,
+      });
       return;
     }
     setImageFile(file);

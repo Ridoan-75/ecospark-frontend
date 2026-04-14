@@ -19,15 +19,22 @@ export default function NewsletterSection() {
     try {
       setLoading(true);
       await newsletterService.subscribe(email);
-      toast.success("Subscribed successfully! 🌿");
+      toast.success("Subscribed successfully! 🌿", {
+        duration: 3000,
+      });
       setEmail("");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         toast.error(
-          (error?.response?.data?.message as string) || "Something went wrong"
+          (error?.response?.data?.message as string) || "Something went wrong",
+          {
+            duration: 5000,
+          }
         );
       } else {
-        toast.error("Something went wrong");
+        toast.error("Something went wrong", {
+          duration: 5000,
+        });
       }
     } finally {
       setLoading(false);

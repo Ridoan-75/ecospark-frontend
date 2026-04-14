@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { voteService } from "@/services/vote.service";
 import { QUERY_KEYS } from "@/constants/queryKeys";
@@ -36,7 +36,9 @@ export default function VoteButtons({ ideaId, initialUserVote }: TProps) {
     mutationFn: ({ type }: { type: "UP" | "DOWN" }) =>
       voteService.castVote(ideaId, type),
     onSuccess: (res) => {
-      toast.success(res.data.message);
+      toast.success(res.message || "Vote submitted successfully!", {
+        duration: 3000,
+      });
       invalidate();
     },
     onError: (err: unknown) => {
@@ -50,13 +52,17 @@ export default function VoteButtons({ ideaId, initialUserVote }: TProps) {
           }
         }
       }
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        duration: 5000,
+      });
     },
   });
 
   const handleVote = (type: "UP" | "DOWN") => {
     if (!isAuthenticated) {
-      toast.error("Please login to vote");
+      toast.error("Please login to vote", {
+        duration: 4000,
+      });
       router.push(ROUTES.LOGIN);
       return;
     }
@@ -76,7 +82,7 @@ export default function VoteButtons({ ideaId, initialUserVote }: TProps) {
             : "glass border-white/10 text-white/50 hover:text-green-400 hover:border-green-500/30"
         )}
       >
-        <ArrowUp className="w-4 h-4" />
+        <ThumbsUp className="w-4 h-4" />
         <span>{upVotes}</span>
       </button>
 
@@ -100,7 +106,7 @@ export default function VoteButtons({ ideaId, initialUserVote }: TProps) {
             : "glass border-white/10 text-white/50 hover:text-red-400 hover:border-red-500/30"
         )}
       >
-        <ArrowDown className="w-4 h-4" />
+        <ThumbsDown className="w-4 h-4" />
         <span>{downVotes}</span>
       </button>
     </div>
