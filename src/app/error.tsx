@@ -30,7 +30,7 @@ export default function Error({
 
         <h2 className="text-3xl font-bold text-white mb-3">Something Went Wrong</h2>
         <p className="text-white/40 text-sm max-w-sm mx-auto mb-2 leading-relaxed">
-          An unexpected error occurred. Don't worry, our team has been notified.
+          An unexpected error occurred. Don&apos;t worry, our team has been notified.
         </p>
         {error?.message && (
           <p className="text-red-400/60 text-xs font-mono mb-8 glass px-4 py-2 rounded-lg inline-block">

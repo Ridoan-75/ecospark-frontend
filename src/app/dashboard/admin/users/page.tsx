@@ -54,7 +54,7 @@ export default function AdminUsersPage() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error(err?.response?.data?.message || "Failed to update status");
+      toast.error((err?.response?.data?.message as string) || "Failed to update status");
     },
   });
 
@@ -66,7 +66,7 @@ export default function AdminUsersPage() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USERS, refetchType: 'active' });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
-      toast.error(err?.response?.data?.message || "Failed to update role");
+      toast.error((err?.response?.data?.message as string) || "Failed to update role");
     },
   });
 

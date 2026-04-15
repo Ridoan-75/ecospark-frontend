@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MessageSquare } from "lucide-react";
 import { commentService } from "@/services/comment.service";
 import { QUERY_KEYS } from "@/constants/queryKeys";
+import { TComment } from "@/types/comment.types";
 import CommentCard from "./CommentCard";
 import CommentForm from "./CommentForm";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,8 +18,8 @@ export default function CommentSection({ ideaId }: TProps) {
     queryFn: () => commentService.getByIdeaId(ideaId, { limit: 50 }),
   });
 
-  const comments = data?.data ?? [];
-  const total = data?.meta?.total ?? 0;
+  const comments = data?.data?.data ?? [];
+  const total = data?.data?.meta?.total ?? 0;
 
   return (
     <div>
@@ -66,7 +67,7 @@ export default function CommentSection({ ideaId }: TProps) {
         />
       ) : (
         <div className="space-y-4">
-          {comments.map((comment: any) => (
+          {comments.map((comment: TComment) => (
             <CommentCard
               key={comment.id}
               comment={comment}

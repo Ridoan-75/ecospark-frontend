@@ -8,7 +8,8 @@ import { QUERY_KEYS } from "@/constants/queryKeys";
 import { ROUTES } from "@/constants/routes";
 import IdeaStatusBadge from "@/components/idea/IdeaStatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDate, truncateText } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import type { TIdea } from "@/types/idea.types";
 
 type TProps = { limit?: number };
 
@@ -57,7 +58,7 @@ export default function RecentIdeas({ limit = 5 }: TProps) {
         </div>
       ) : (
         <div className="space-y-3">
-          {ideas.map((idea) => (
+          {ideas.map((idea: TIdea) => (
             <Link key={idea.id} href={ROUTES.IDEA_DETAILS(idea.id)}>
               <div className="flex gap-3 p-3 rounded-xl hover:bg-white/5 transition-all group">
                 <div className="w-10 h-10 rounded-xl glass-purple flex items-center justify-center shrink-0">

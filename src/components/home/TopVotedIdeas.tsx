@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ideaService } from "@/services/idea.service";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { ROUTES } from "@/constants/routes";
-import { truncateText } from "@/lib/utils";
+import type { TIdea } from "@/types/idea.types";
 
 export default function TopVotedIdeas() {
   const { data, isLoading } = useQuery({
@@ -51,7 +51,7 @@ export default function TopVotedIdeas() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {ideas.map((idea, index) => (
+            {ideas.map((idea: TIdea, index: number) => (
               <Link key={idea.id} href={ROUTES.IDEA_DETAILS(idea.id)}>
                 <div className="glass glass-hover gradient-border rounded-2xl overflow-hidden group h-full flex flex-col relative">
                   {/* Rank badge */}
@@ -69,11 +69,11 @@ export default function TopVotedIdeas() {
                     {idea.images?.[0] ? (
                       <Image src={idea.images[0]} alt={idea.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-purple-900/40 to-dark-400 flex items-center justify-center">
+                      <div className="w-full h-full bg-linear-to-br from-purple-900/40 to-dark-400 flex items-center justify-center">
                         <Sparkles className="w-8 h-8 text-purple-400/30" />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-dark-400/90 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-dark-400/90 to-transparent" />
                   </div>
 
                   <div className="p-5 flex flex-col flex-1">

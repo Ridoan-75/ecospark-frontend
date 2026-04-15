@@ -39,7 +39,7 @@ export default function AdminOverview() {
     {
       icon: Users,
       label: "Total Members",
-      value: usersData?.data?.meta?.total ?? 0,
+      value: usersData?.meta?.total ?? 0,
       color: "text-blue-400",
       bg: "bg-blue-500/15",
       loading: usersLoading,
@@ -47,7 +47,7 @@ export default function AdminOverview() {
     {
       icon: Lightbulb,
       label: "Total Ideas",
-      value: ideasData?.data?.meta?.total ?? 0,
+      value: ideasData?.meta?.total ?? 0,
       color: "text-purple-400",
       bg: "bg-purple-500/15",
       loading: ideasLoading,
@@ -55,7 +55,7 @@ export default function AdminOverview() {
     {
       icon: Clock,
       label: "Under Review",
-      value: reviewIdeasData?.data?.meta?.total ?? 0,
+      value: reviewIdeasData?.meta?.total ?? 0,
       color: "text-amber-400",
       bg: "bg-amber-500/15",
       loading: ideasLoading,
@@ -63,7 +63,7 @@ export default function AdminOverview() {
     {
       icon: CheckCircle2,
       label: "Approved Ideas",
-      value: approvedIdeasData?.data?.meta?.total ?? 0,
+      value: approvedIdeasData?.meta?.total ?? 0,
       color: "text-green-400",
       bg: "bg-green-500/15",
       loading: ideasLoading,
@@ -71,7 +71,7 @@ export default function AdminOverview() {
     {
       icon: CreditCard,
       label: "Total Payments",
-      value: paymentsData?.data?.data?.data?.stats?.totalSuccessfulPayments ?? 0,
+      value: paymentsData?.data?.data?.stats?.totalSuccessfulPayments ?? 0,
       color: "text-emerald-400",
       bg: "bg-emerald-500/15",
       loading: paymentsLoading,
@@ -79,7 +79,7 @@ export default function AdminOverview() {
     {
       icon: TrendingUp,
       label: "Total Revenue",
-      value: formatCurrency(paymentsData?.data?.data?.data?.stats?.totalRevenue ?? 0),
+      value: formatCurrency(paymentsData?.data?.data?.stats?.totalRevenue ?? 0),
       color: "text-green-400",
       bg: "bg-green-500/15",
       loading: paymentsLoading,

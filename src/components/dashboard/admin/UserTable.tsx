@@ -33,8 +33,8 @@ export default function UserTable() {
     queryFn: () => userService.getAll({ page, limit: 10, searchTerm: debounced || undefined, role: (role || undefined) as "MEMBER" | "ADMIN" | undefined }),
   });
 
-  const users = data?.data?.data ?? [];
-  const meta = data?.data?.meta;
+  const users = data?.data ?? [];
+  const meta = data?.meta;
 
   const { mutate: updateStatus, isPending: statusPending } = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
@@ -125,7 +125,7 @@ export default function UserTable() {
                   <EmptyState icon={Search} title="No users found" />
                 </td></tr>
               ) : (
-                users.map((u) => (
+                users.map((u: TUser) => (
                   <tr key={u.id} className="hover:bg-white/2">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">

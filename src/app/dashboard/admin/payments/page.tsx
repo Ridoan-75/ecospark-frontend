@@ -14,6 +14,7 @@ import {
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { paymentService } from "@/services/payment.service";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { TPayment } from "@/types/payment.types";
 import EmptyState from "@/components/shared/EmptyState";
 import PageHeader from "@/components/shared/PageHeader";
 import StatCard from "@/components/dashboard/StatCard";
@@ -37,8 +38,8 @@ export default function AdminPaymentsPage() {
       }),
   });
 
-  const payments = data?.data?.payments ?? [];
-  const stats = data?.data?.stats;
+  const payments = data?.data?.data?.payments ?? [];
+  const stats = data?.data?.data?.stats;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -111,7 +112,7 @@ export default function AdminPaymentsPage() {
               </tr>
             </thead>
             <tbody>
-              {payments.map((payment) => {
+              {payments.map((payment: TPayment) => {
                 const config = statusConfig[payment.status] ?? {
                   label: payment.status,
                   className: "badge-purple",
@@ -127,7 +128,7 @@ export default function AdminPaymentsPage() {
                       </p>
                     </td>
                     <td className="p-4 hidden md:table-cell">
-                      <p className="text-white/60 text-sm line-clamp-1 max-w-[160px]">
+                      <p className="text-white/60 text-sm line-clamp-1 max-w-40">
                         {payment.idea?.title ?? "Unknown"}
                       </p>
                     </td>

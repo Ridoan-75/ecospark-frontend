@@ -140,7 +140,7 @@ export default function MyIdeasPage() {
               </tr>
             </thead>
             <tbody>
-              {ideas.map((idea) => (
+              {ideas.map((idea: TIdea) => (
                 <tr key={idea.id}>
                   <td className="p-4">
                     <p className="text-white text-sm font-medium line-clamp-1 max-w-50">

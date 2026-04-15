@@ -315,7 +315,7 @@ export default function AdminIdeasPage() {
         confirmLabel="Delete"
         onConfirm={() => deleteTarget && deleteIdea(deleteTarget.id)}
         loading={deleting}
-        variant="destructive"
+        variant="danger"
       />
     </div>
   );
