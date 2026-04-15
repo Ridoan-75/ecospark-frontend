@@ -155,7 +155,19 @@ export default function IdeaDetailsPage() {
 
                 <div className="flex flex-wrap items-center gap-4 text-white/40 text-sm">
                   <div className="flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-purple-400" />
+                    {idea.author.profileImage ? (
+                      <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
+                        <Image
+                          src={idea.author.profileImage}
+                          alt={idea.author.name}
+                          width={24}
+                          height={24}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <User className="w-3.5 h-3.5 text-purple-400" />
+                    )}
                     <span>{idea.author.name}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -265,9 +277,21 @@ export default function IdeaDetailsPage() {
                 Author
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-sm font-bold shrink-0">
-                  {idea.author.name.charAt(0).toUpperCase()}
-                </div>
+                {idea.author.profileImage ? (
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <Image
+                      src={idea.author.profileImage}
+                      alt={idea.author.name}
+                      width={40}
+                      height={40}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                    {idea.author.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <div>
                   <p className="text-white font-medium text-sm">
                     {idea.author.name}

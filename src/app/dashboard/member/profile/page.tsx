@@ -49,7 +49,16 @@ export default function ProfilePage() {
         duration: 3000,
       });
       updateUser(res.data);
+      
+      // Invalidate all relevant queries to refresh profile picture everywhere
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ME, refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.IDEAS, refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_IDEAS, refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TOP_VOTED_IDEAS, refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MY_COMMENTS, refetchType: 'active' });
+      
+      // Invalidate all comment queries
+      queryClient.removeQueries({ queryKey: ["comments"] });
     },
     onError: (err: AxiosError<Record<string, unknown>>) => {
       toast.error((err?.response?.data?.message as string) || "Failed to update profile", {

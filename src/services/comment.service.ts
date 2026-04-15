@@ -21,12 +21,33 @@ const getByIdeaId = async (
   params?: { page?: number; limit?: number }
 ) => {
   const query = new URLSearchParams();
+
   if (params?.page) query.append("page", String(params.page));
   if (params?.limit) query.append("limit", String(params.limit));
-  const res = await axiosInstance.get<TApiResponse<TCommentsResponse>>(
-    `/comments/idea/${ideaId}?${query.toString()}`
-  );
-  return res.data;
+
+  // ✅ FIXED: headers removed (CORS issue fix)
+  const res = await axiosInstance.get<
+    TApiResponse<TCommentsResponse | TComment[]>
+  >(`/comments/idea/${ideaId}?${query.toString()}`);
+
+  const payload = res.data;
+
+  if (Array.isArray(payload.data)) {
+    return {
+      ...payload,
+      data: {
+        data: payload.data,
+        meta: payload.meta ?? {
+          page: 1,
+          limit: payload.data.length,
+          total: payload.data.length,
+          totalPage: 1,
+        },
+      },
+    };
+  }
+
+  return payload as TApiResponse<TCommentsResponse>;
 };
 
 const update = async (id: string, body: string) => {
@@ -46,11 +67,14 @@ const deleteComment = async (id: string) => {
 
 const getMyComments = async (params?: { page?: number; limit?: number }) => {
   const query = new URLSearchParams();
+
   if (params?.page) query.append("page", String(params.page));
   if (params?.limit) query.append("limit", String(params.limit));
+
   const res = await axiosInstance.get<TApiResponse<TCommentsResponse>>(
     `/comments/my?${query.toString()}`
   );
+
   return res.data;
 };
 
@@ -61,13 +85,16 @@ const getAdminAll = async (params?: {
   userId?: string;
 }) => {
   const query = new URLSearchParams();
+
   if (params?.page) query.append("page", String(params.page));
   if (params?.limit) query.append("limit", String(params.limit));
   if (params?.ideaId) query.append("ideaId", params.ideaId);
   if (params?.userId) query.append("userId", params.userId);
+
   const res = await axiosInstance.get<TApiResponse<TCommentsResponse>>(
     `/comments/admin/all?${query.toString()}`
   );
+
   return res.data;
 };
 

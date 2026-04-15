@@ -13,9 +13,10 @@ import EmptyState from "@/components/shared/EmptyState";
 type TProps = { ideaId: string };
 
 export default function CommentSection({ ideaId }: TProps) {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: QUERY_KEYS.COMMENTS(ideaId),
     queryFn: () => commentService.getByIdeaId(ideaId, { limit: 50 }),
+    refetchOnWindowFocus: true,
   });
 
   const comments = data?.data?.data ?? [];
@@ -39,7 +40,7 @@ export default function CommentSection({ ideaId }: TProps) {
       {/* Add Comment */}
       <div className="glass gradient-border rounded-xl p-4 mb-6">
         <p className="text-white/50 text-xs mb-3">Add a comment</p>
-        <CommentForm ideaId={ideaId} />
+        <CommentForm ideaId={ideaId} onSuccess={() => refetch()} />
       </div>
 
       {/* Comments List */}

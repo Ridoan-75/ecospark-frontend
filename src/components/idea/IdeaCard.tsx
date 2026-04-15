@@ -74,9 +74,21 @@ export default function IdeaCard({ idea, showStatus = false }: TProps) {
 
           {/* Author */}
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-5 h-5 rounded-full bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-              {idea.author?.name?.charAt(0).toUpperCase() || "A"}
-            </div>
+            {idea.author?.profileImage ? (
+              <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0">
+                <Image
+                  src={idea.author.profileImage}
+                  alt={idea.author.name}
+                  width={20}
+                  height={20}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-5 h-5 rounded-full bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                {idea.author?.name?.charAt(0).toUpperCase() || "A"}
+              </div>
+            )}
             <span className="text-white/35 text-xs truncate">
               {idea.author?.name || "Anonymous"}
             </span>
