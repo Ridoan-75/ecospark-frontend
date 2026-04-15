@@ -49,7 +49,7 @@ export default function NewsletterSection() {
     <section className="relative py-20 px-4 md:px-8 lg:px-16 overflow-hidden">
 
       {/* BACKGROUND */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-purple-600/10 blur-[140px] rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-175 bg-purple-600/10 blur-[140px] rounded-full" />
 
       <div className="max-w-6xl mx-auto relative z-10">
 

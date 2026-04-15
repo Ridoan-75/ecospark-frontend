@@ -139,7 +139,7 @@ export default function IdeaTable() {
               ) : ideas.length === 0 ? (
                 <tr><td colSpan={6}><EmptyState icon={Search} title="No ideas found" /></td></tr>
               ) : (
-                ideas.map((idea) => (
+                ideas.map((idea: TIdea) => (
                   <tr key={idea.id}>
                     <td className="px-4 py-3">
                       <p className="text-white/80 text-sm font-medium line-clamp-1 max-w-48">{idea.title}</p>

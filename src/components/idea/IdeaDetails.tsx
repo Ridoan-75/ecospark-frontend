@@ -47,7 +47,7 @@ export default function IdeaDetails({ idea }: TProps) {
           {idea.images?.[0] && (
             <div className="relative h-72">
               <Image src={idea.images[0]} alt={idea.title} fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-400/95 via-dark-400/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-dark-400/95 via-dark-400/20 to-transparent" />
               <div className="absolute top-4 left-4 flex gap-2">
                 <IdeaStatusBadge status={idea.status} />
                 {idea.isPaid && canViewFull && (
@@ -147,7 +147,7 @@ export default function IdeaDetails({ idea }: TProps) {
         <div className="glass gradient-border rounded-2xl p-5">
           <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Author</p>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-sm font-bold">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-sm font-bold">
               {idea.author.name.charAt(0).toUpperCase()}
             </div>
             <div>

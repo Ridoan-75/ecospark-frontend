@@ -63,10 +63,10 @@ export default function Footer() {
     <footer className="pt-20 pb-10 px-4 relative overflow-hidden">
 
       {/* Background */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black via-purple-950/40 to-black backdrop-blur-3xl" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-b from-black via-purple-950/40 to-black backdrop-blur-3xl" />
 
       {/* Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-40 bg-purple-600/20 blur-3xl opacity-50" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-175 h-40 bg-purple-600/20 blur-3xl opacity-50" />
 
       <div className="max-w-7xl mx-auto relative z-10">
 
@@ -108,7 +108,7 @@ export default function Footer() {
                       className="text-white/50 text-sm relative group"
                     >
                       {link.label}
-                      <span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-purple-400 transition-all duration-300 group-hover:w-full" />
+                      <span className="absolute left-0 -bottom-1 w-0 h-px bg-purple-400 transition-all duration-300 group-hover:w-full" />
                     </Link>
                   </li>
                 ))}

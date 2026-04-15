@@ -118,7 +118,7 @@ export default function HowItWorks() {
 
         {/* Steps (UNCHANGED ✅) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-          <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
+          <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-px bg-linear-to-r from-transparent via-purple-500/30 to-transparent" />
 
           {steps.map((step) => {
             const Icon = step.icon;
@@ -169,7 +169,7 @@ export default function HowItWorks() {
         {/* FAQ SECTION (REPLACED ✅) */}
         <div className="mt-24 py-24 relative">
 
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-600/8 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-purple-600/8 rounded-full blur-[100px]" />
 
           <div className="max-w-3xl mx-auto relative z-10">
 

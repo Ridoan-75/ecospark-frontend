@@ -50,7 +50,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between relative h-12">
 
           {/* LEFT — Logo */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Logo variant="compact" />
           </div>
 
@@ -73,7 +73,7 @@ export default function Navbar() {
           </div>
 
           {/* RIGHT — Auth Buttons */}
-          <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+          <div className="hidden md:flex items-center gap-2 shrink-0">
             {isAuthenticated && user ? (
               <>
                 {/* Dashboard Button */}
@@ -93,7 +93,7 @@ export default function Navbar() {
                     <button className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-purple-500/10 transition-all border border-purple-400/30 hover:border-purple-400/50 duration-200 h-10 cursor-pointer">
                       <Avatar className="w-6 h-6">
                         <AvatarImage src={user.profileImage || ""} />
-                        <AvatarFallback className="bg-gradient-to-br from-purple-600 to-violet-600 text-white text-[10px] font-semibold">
+                        <AvatarFallback className="bg-linear-to-br from-purple-600 to-violet-600 text-white text-[10px] font-semibold">
                           {getInitials(user.name)}
                         </AvatarFallback>
                       </Avatar>

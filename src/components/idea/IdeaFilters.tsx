@@ -43,7 +43,7 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
     filters.sortBy !== "recent";
 
   const triggerClass =
-    "bg-white/8 border border-white/20 hover:border-white/30 focus:border-white/40 h-[52px] rounded-xl text-white transition-all w-full px-4";
+    "bg-white/8 border border-white/20 hover:border-white/30 focus:border-white/40 h-13 rounded-xl text-white transition-all w-full px-4";
 
   const itemClass = "hover:bg-white/10 focus:bg-white/10 cursor-pointer";
 
@@ -58,7 +58,7 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
             placeholder="Search ideas..."
             value={filters.searchTerm}
             onChange={(e) => onChange({ searchTerm: e.target.value })}
-            className="bg-white/8 border border-white/20 hover:border-white/30 focus:border-white/40 pl-11 h-[52px] rounded-xl text-white placeholder:text-white/40 transition-all w-full"
+            className="bg-white/8 border border-white/20 hover:border-white/30 focus:border-white/40 pl-11 h-13 rounded-xl text-white placeholder:text-white/40 transition-all w-full"
           />
         </div>
 
@@ -117,7 +117,7 @@ export default function IdeaFilters({ filters, onChange, onReset }: TProps) {
           <Button
             onClick={onReset}
             variant="ghost"
-            className="h-[52px] px-4 text-white/50 hover:text-white hover:bg-white/10 rounded-xl gap-2 shrink-0 transition-all border border-white/15"
+            className="h-13 px-4 text-white/50 hover:text-white hover:bg-white/10 rounded-xl gap-2 shrink-0 transition-all border border-white/15"
           >
             <X className="w-4 h-4" />
             Reset

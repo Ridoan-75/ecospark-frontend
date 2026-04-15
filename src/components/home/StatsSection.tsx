@@ -44,7 +44,7 @@ export default function StatsSection() {
       <div className="max-w-7xl mx-auto">
         <div className="glass gradient-border rounded-2xl p-8">
           {loading ? (
-            <div className="flex justify-center items-center min-h-[200px]">
+            <div className="flex justify-center items-center min-h-50">
               <LoadingSpinner />
             </div>
           ) : (

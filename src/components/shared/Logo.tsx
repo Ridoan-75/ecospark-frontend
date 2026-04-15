@@ -18,7 +18,7 @@ export default function Logo({
   if (variant === "full") {
     return (
       <Link href={ROUTES.HOME} className={`flex items-center gap-2.5 ${className}`}>
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
+        <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
           <Leaf className="w-4 h-4 text-white" />
         </div>
         <div>

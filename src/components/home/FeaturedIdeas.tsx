@@ -32,7 +32,7 @@ export default function FeaturedIdeas() {
     <section className="py-24 px-4 relative">
 
       {/* Section Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple-600/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-100 bg-purple-600/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
 
@@ -106,7 +106,7 @@ function IdeaCard({ idea, index }: { idea: TIdea; index: number }) {
           )}
 
           {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-dark-400/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-dark-400/80 via-transparent to-transparent" />
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex gap-2">
