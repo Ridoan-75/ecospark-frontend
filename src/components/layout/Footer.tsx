@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, Leaf } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
@@ -33,10 +35,10 @@ const socialLinks = [
   },
   {
     href: "#",
-    label: "X (Twitter)",
+    label: "Twitter",
     svg: (
       <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631z" />
       </svg>
     ),
   },
@@ -45,7 +47,7 @@ const socialLinks = [
     label: "LinkedIn",
     svg: (
       <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452z" />
       </svg>
     ),
   },
@@ -58,37 +60,33 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t-2 border-purple-500/40 pt-16 pb-8 px-4 relative overflow-hidden">
-      {/* Deep glass background overlay */}
-      <div className="absolute inset-0 -z-10 backdrop-blur-3xl bg-gradient-to-b from-black/70 via-purple-900/30 to-black/80 pointer-events-none" />
+    <footer className="pt-20 pb-10 px-4 relative overflow-hidden">
 
-      {/* Gradient border glow - top */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/80 to-transparent blur-sm" />
-      
-      {/* Subtle glow effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-32 bg-gradient-to-b from-purple-600/20 to-transparent blur-3xl opacity-60 pointer-events-none" />
+      {/* Background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black via-purple-950/40 to-black backdrop-blur-3xl" />
+
+      {/* Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-40 bg-purple-600/20 blur-3xl opacity-50" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-16">
 
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="mb-4">
-              <Logo variant="compact" />
-            </div>
-            <p className="text-white/40 text-sm leading-relaxed max-w-xs mb-6">
-              A community portal for sharing sustainability ideas to help
-              build a greener and better future for everyone.
+            <Logo variant="compact" />
+
+            <p className="text-white/50 text-sm leading-relaxed mt-4 max-w-sm">
+              Share sustainability ideas, connect with innovators, and help build a greener future together.
             </p>
 
-            {/* Social Links */}
-            <div className="flex gap-3">
+            {/* Social */}
+            <div className="flex gap-3 mt-6">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
-                  aria-label={social.label}
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-purple-500/40 hover:border-purple-400/60 transition-all border border-white/20 backdrop-blur-md bg-white/5 shadow-lg hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white/50 hover:text-white transition-all border border-white/10 bg-white/5 hover:bg-purple-500/30 hover:border-purple-400/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]"
                 >
                   {social.svg}
                 </a>
@@ -99,7 +97,7 @@ export default function Footer() {
           {/* Links */}
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <h4 className="text-white/80 font-semibold text-sm mb-4">
+              <h4 className="text-white font-semibold text-sm mb-5 tracking-wide">
                 {title}
               </h4>
               <ul className="space-y-3">
@@ -107,28 +105,32 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-white/40 hover:text-purple-400 text-sm transition-colors"
+                      className="text-white/50 text-sm relative group"
                     >
                       {link.label}
+                      <span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-purple-400 transition-all duration-300 group-hover:w-full" />
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-purple-500/40 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-sm">
             © {new Date().getFullYear()} EcoSpark Hub. All rights reserved.
           </p>
+
           <div className="flex items-center gap-2 text-white/40 text-sm">
             <span>Built with</span>
-            <Leaf className="w-3.5 h-3.5 text-green-500" />
+            <Leaf className="w-4 h-4 text-green-400 animate-pulse" />
             <span>for the planet</span>
           </div>
         </div>
+
       </div>
     </footer>
   );
