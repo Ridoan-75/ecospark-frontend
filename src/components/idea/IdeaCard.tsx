@@ -40,12 +40,12 @@ export default function IdeaCard({ idea, showStatus = false }: TProps) {
 
           {/* Top badges */}
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-            <span className="badge-purple rounded-full px-2.5 py-1 text-xs">
+            <span className="rounded-full px-2.5 py-1 text-xs bg-violet-700 text-white border border-violet-700 shadow-sm shadow-violet-700/30">
               {idea.category.name}
             </span>
             {idea.isPaid && (
-              <span className="badge-amber rounded-full px-2.5 py-1 text-xs flex items-center gap-1">
-                <Lock className="w-2.5 h-2.5" />
+              <span className="rounded-full px-2.5 py-1 text-xs flex items-center gap-1 bg-red-600 text-white border border-red-600 shadow-sm shadow-red-600/30">
+                <Lock className="w-2.5 h-2.5 text-white" />
                 {formatCurrency(idea.price!)}
               </span>
             )}

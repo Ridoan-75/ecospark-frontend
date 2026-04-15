@@ -110,12 +110,12 @@ function IdeaCard({ idea, index }: { idea: TIdea; index: number }) {
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex gap-2">
-            <Badge className="glass-purple border-purple-500/30 text-purple-300 text-xs">
+            <Badge className="rounded-full px-2.5 py-1 text-xs bg-violet-700 text-white border border-violet-700 shadow-sm shadow-violet-700/30">
               {idea.category.name}
             </Badge>
             {idea.isPaid && (
-              <Badge className="bg-amber-500/20 border-amber-500/30 text-amber-300 text-xs gap-1">
-                <Lock className="w-2.5 h-2.5" />
+              <Badge className="rounded-full px-2.5 py-1 text-xs gap-1 flex items-center bg-red-600 text-white border border-red-600 shadow-sm shadow-red-600/30">
+                <Lock className="w-2.5 h-2.5 text-white" />
                 {formatCurrency(idea.price!)}
               </Badge>
             )}
