@@ -217,7 +217,7 @@ export default function IdeaDetailsPage() {
                       Supporting Images
                     </h2>
                     <div className="grid grid-cols-2 gap-3">
-                      {idea.images.slice(1).map((img: string, i: number) => (
+                      {(idea.images as string[]).slice(1).map((img: string, i: number) => (
                         <div
                           key={i}
                           className="relative aspect-video rounded-xl overflow-hidden"
