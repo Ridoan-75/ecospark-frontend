@@ -44,7 +44,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <nav className="backdrop-blur-xl bg-dark-400/60 border border-white/10 shadow-2xl mx-2 mt-3 rounded-2xl px-5 py-3">
+      <nav className="backdrop-blur-3xl bg-dark-400/75 border border-white/20 shadow-2xl mx-2 mt-3 rounded-2xl px-5 py-3" style={{ backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))" }}>
 
         {/* 3 column layout: Logo | Nav Links | Buttons */}
         <div className="flex items-center justify-between relative h-12">
@@ -90,7 +90,7 @@ export default function Navbar() {
                 {/* User Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-purple-500/10 transition-all border border-purple-400/30 hover:border-purple-400/50 duration-200 h-10">
+                    <button className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-purple-500/10 transition-all border border-purple-400/30 hover:border-purple-400/50 duration-200 h-10 cursor-pointer">
                       <Avatar className="w-6 h-6">
                         <AvatarImage src={user.profileImage || ""} />
                         <AvatarFallback className="bg-gradient-to-br from-purple-600 to-violet-600 text-white text-[10px] font-semibold">

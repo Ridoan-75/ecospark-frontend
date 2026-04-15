@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { ArrowRight, Play, Sparkles, Zap } from "lucide-react";
@@ -50,33 +53,51 @@ export default function HeroBanner() {
             </p>
 
             {/* ================= UPGRADED BUTTONS ================= */}
-            <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+            <motion.div 
+              className="flex flex-row gap-4 sm:gap-5 justify-center lg:justify-start max-w-2xl mx-auto lg:mx-0"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
 
               {/* PRIMARY BUTTON */}
-              <Link href={ROUTES.IDEAS}>
-                <Button className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-10 py-7 text-lg font-semibold rounded-2xl flex items-center gap-3 shadow-[0_0_30px_rgba(147,51,234,0.4)] hover:shadow-[0_0_50px_rgba(147,51,234,0.7)] transition-all duration-300">
+              <motion.div
+                className="flex-1 sm:flex-none"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link href={ROUTES.IDEAS} className="flex-1 sm:flex-none">
+                  <Button className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-8 sm:px-10 py-6 h-14 text-lg font-semibold rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(147,51,234,0.4)] hover:shadow-[0_0_50px_rgba(147,51,234,0.7)] transition-all duration-300 whitespace-nowrap w-full sm:w-auto">
 
-                  {/* glow animation layer */}
-                  <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition duration-500 blur-xl" />
+                    {/* glow animation layer */}
+                    <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition duration-500 blur-xl" />
 
-                  <Zap className="w-5 h-5" />
-                  Explore Ideas
-
-                  <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300" />
-                </Button>
-              </Link>
+                    <Zap className="w-5 h-5 flex-shrink-0" />
+                    <span>Explore Ideas</span>
+                    <ArrowRight className="w-5 h-5 flex-shrink-0 transform group-hover:translate-x-2 transition-transform duration-300" />
+                  </Button>
+                </Link>
+              </motion.div>
 
               {/* SECONDARY BUTTON */}
-              <Link href={ROUTES.HOW_IT_WORKS}>
-                <Button className="group glass border-white/20 text-white px-10 py-7 text-lg font-semibold rounded-2xl flex items-center gap-3 backdrop-blur-md hover:scale-105 hover:border-purple-400/40 transition-all duration-300">
+              <motion.div
+                className="flex-1 sm:flex-none"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link href={ROUTES.HOW_IT_WORKS} className="flex-1 sm:flex-none">
+                  <Button className="group relative overflow-hidden bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/40 hover:to-blue-500/40 border border-cyan-400/40 hover:border-cyan-300/60 text-white px-8 sm:px-10 py-6 h-14 text-lg font-semibold rounded-2xl flex items-center justify-center gap-3 backdrop-blur-md shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:shadow-[0_0_40px_rgba(34,211,238,0.4)] transition-all duration-300 whitespace-nowrap w-full sm:w-auto">
 
-                  <Play className="w-5 h-5 fill-current group-hover:scale-110 transition-transform" />
-                  How It Works
+                    <span className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 to-blue-400/10 opacity-0 group-hover:opacity-100 transition duration-500 blur-lg" />
 
-                </Button>
-              </Link>
+                    <Play className="w-5 h-5 flex-shrink-0 fill-current group-hover:scale-110 transition-transform duration-300" />
+                    <span>How It Works</span>
 
-            </div>
+                  </Button>
+                </Link>
+              </motion.div>
+
+            </motion.div>
           </div>
 
           {/* RIGHT IMAGE */}

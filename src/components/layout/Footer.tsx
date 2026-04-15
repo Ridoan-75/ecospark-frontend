@@ -58,11 +58,17 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 pt-16 pb-8 px-4 relative">
-      {/* Top glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+    <footer className="border-t-2 border-purple-500/40 pt-16 pb-8 px-4 relative overflow-hidden">
+      {/* Deep glass background overlay */}
+      <div className="absolute inset-0 -z-10 backdrop-blur-3xl bg-gradient-to-b from-black/70 via-purple-900/30 to-black/80 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      {/* Gradient border glow - top */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/80 to-transparent blur-sm" />
+      
+      {/* Subtle glow effect */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-32 bg-gradient-to-b from-purple-600/20 to-transparent blur-3xl opacity-60 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
 
           {/* Brand */}
@@ -82,7 +88,7 @@ export default function Footer() {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-9 h-9 glass rounded-lg flex items-center justify-center text-white/40 hover:text-purple-400 hover:border-purple-500/30 transition-all"
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-purple-500/40 hover:border-purple-400/60 transition-all border border-white/20 backdrop-blur-md bg-white/5 shadow-lg hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]"
                 >
                   {social.svg}
                 </a>
@@ -113,11 +119,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/30 text-sm">
+        <div className="border-t border-purple-500/40 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-white/40 text-sm">
             © {new Date().getFullYear()} EcoSpark Hub. All rights reserved.
           </p>
-          <div className="flex items-center gap-2 text-white/30 text-sm">
+          <div className="flex items-center gap-2 text-white/40 text-sm">
             <span>Built with</span>
             <Leaf className="w-3.5 h-3.5 text-green-500" />
             <span>for the planet</span>

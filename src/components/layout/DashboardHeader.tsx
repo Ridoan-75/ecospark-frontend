@@ -93,7 +93,7 @@ export default function DashboardHeader() {
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2.5 glass rounded-xl px-3 py-1.5 hover:bg-white/10 transition-all">
+              <button className="flex items-center gap-2.5 glass rounded-xl px-3 py-1.5 hover:bg-white/10 transition-all cursor-pointer">
                 <Avatar className="w-7 h-7">
                   <AvatarImage src={user.profileImage || ""} />
                   <AvatarFallback className="bg-purple-600 text-white text-xs font-bold">
@@ -184,7 +184,7 @@ export default function DashboardHeader() {
             {!isAdmin && (
               <div className="p-3 border-t border-white/8">
                 <Link href={ROUTES.MEMBER_CREATE_IDEA} onClick={() => setMobileMenuOpen(false)}>
-                  <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 text-sm font-medium flex items-center justify-center gap-2 transition-all">
+                  <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 text-sm font-medium flex items-center justify-center gap-2 transition-all cursor-pointer">
                     <Plus className="w-4 h-4" />
                     New Idea
                   </button>

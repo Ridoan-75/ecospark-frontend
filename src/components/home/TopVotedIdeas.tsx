@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { ArrowUp, ArrowRight, Crown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -94,12 +95,21 @@ export default function TopVotedIdeas() {
         )}
 
         <div className="text-center mt-10">
-          <Link href={`${ROUTES.IDEAS}?sortBy=top_voted`}>
-            <Button className="btn-glass text-white/70 hover:text-white px-8 rounded-xl gap-2 group">
-              See All Top Ideas
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: "-50px" }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Link href={`${ROUTES.IDEAS}?sortBy=top_voted`}>
+              <Button className="btn-glass text-white/70 hover:text-white px-8 rounded-xl gap-2 group">
+                See All Top Ideas
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </div>
     </section>

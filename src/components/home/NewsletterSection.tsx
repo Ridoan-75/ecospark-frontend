@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -133,7 +134,13 @@ export default function NewsletterSection() {
             </div>
 
             {/* RIGHT */}
-            <div className="space-y-5">
+            <motion.div 
+              className="space-y-5"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, margin: "-100px" }}
+            >
 
               <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
                 {[
@@ -155,27 +162,32 @@ export default function NewsletterSection() {
                 placeholder="Enter your email..."
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="glass border-white/15 text-white placeholder:text-white/30 focus:border-purple-500/50 bg-transparent rounded-xl h-14 px-5"
+                className="glass border-white/15 text-white placeholder:text-white/30 focus:border-purple-500/50 bg-transparent rounded-xl h-14 px-5 cursor-pointer"
                 required
               />
 
-              <Button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="btn-glow w-full h-14 rounded-xl text-white font-semibold flex items-center justify-center gap-2"
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Subscribing...
-                  </span>
-                ) : (
-                  <>
-                    Get Free Updates
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="group relative overflow-hidden w-full bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white border-0 transition-all duration-300 font-semibold h-16 px-8 rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(147,51,234,0.4)] hover:shadow-[0_0_50px_rgba(147,51,234,0.7)] text-lg"
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Subscribing...
+                    </span>
+                  ) : (
+                    <>
+                      Subscribe
+                      <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" />
+                    </>
+                  )}
+                </Button>
+              </motion.div>
 
               <div className="flex items-center justify-center gap-2 pt-1">
                 <Shield className="w-3.5 h-3.5 text-white/30" />
@@ -183,7 +195,7 @@ export default function NewsletterSection() {
                   No spam. Unsubscribe anytime.
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

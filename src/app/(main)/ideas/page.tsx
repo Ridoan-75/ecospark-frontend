@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Lightbulb, Sparkles } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -80,7 +81,12 @@ export default function AllIdeasPage() {
       <div className="max-w-7xl mx-auto relative z-10">
 
         {/* Header */}
-        <div className="text-center mb-10 animate-fade-in">
+        <motion.div 
+          className="text-center mb-10 animate-fade-in"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="inline-flex items-center gap-2 glass-purple rounded-full px-4 py-2 mb-4">
             <Sparkles className="w-3.5 h-3.5 text-purple-400" />
             <span className="text-purple-300 text-sm font-medium">
@@ -98,7 +104,7 @@ export default function AllIdeasPage() {
               {meta.total} ideas found
             </p>
           )}
-        </div>
+        </motion.div>
 
         {/* Filters */}
         <IdeaFilters
