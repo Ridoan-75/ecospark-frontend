@@ -142,21 +142,22 @@ export default function IdeaForm({
 
       {/* Category + isPaid row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Category Dropdown */}
         <div className="space-y-2">
           <Label className={labelClass}>Category *</Label>
           <Select
             value={watch("categoryId")}
             onValueChange={(v) => setValue("categoryId", v)}
           >
-            <SelectTrigger className="input-glass h-11 rounded-xl">
+            <SelectTrigger className="input-glass h-11 rounded-xl border border-white/10 hover:border-white/20 focus:border-purple-500/50 transition-all duration-200">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
-            <SelectContent className="bg-dark-200 border-white/10 text-white">
+            <SelectContent className="glass rounded-xl border border-white/10 backdrop-blur-xl bg-gradient-to-b from-white/10 to-white/5 shadow-2xl">
               {categories.map((cat) => (
                 <SelectItem
                   key={cat.id}
                   value={cat.id}
-                  className="hover:bg-white/10 focus:bg-white/10"
+                  className="hover:bg-white/20 focus:bg-white/20 data-[highlighted]:bg-white/20 transition-colors cursor-pointer text-white rounded-lg"
                 >
                   {cat.name}
                 </SelectItem>
@@ -168,38 +169,60 @@ export default function IdeaForm({
           )}
         </div>
 
+        {/* Pricing Toggle */}
         <div className="space-y-2">
-          <Label className={labelClass}>Pricing</Label>
-          <div className="glass rounded-xl h-11 px-4 flex items-center justify-between border border-white/10">
-            <span className="text-white/60 text-sm">
-              {isPaid ? "Paid idea" : "Free idea"}
-            </span>
-            <Switch
-              checked={isPaid}
-              onCheckedChange={(v) => {
-                setValue("isPaid", v);
-                if (!v) setValue("price", null);
-              }}
-            />
-          </div>
+          <Label className={labelClass}>Pricing *</Label>
+          <button
+            type="button"
+            onClick={() => {
+              const newValue = !isPaid;
+              setValue("isPaid", newValue);
+              if (!newValue) setValue("price", null);
+            }}
+            className={`w-full glass rounded-xl h-11 px-4 flex items-center justify-between border transition-all duration-200 ${
+              isPaid 
+                ? "border-emerald-500/50 bg-emerald-500/10 hover:border-emerald-500/70 hover:bg-emerald-500/15" 
+                : "border-white/10 hover:border-white/20 hover:bg-white/5"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span className={`text-sm font-medium transition-colors ${
+                isPaid ? "text-emerald-400" : "text-white/60"
+              }`}>
+                {isPaid ? "🔒 Paid Idea" : "🌿 Free Idea"}
+              </span>
+            </div>
+            
+            {/* Custom Toggle Circle */}
+            <div className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
+              isPaid ? "bg-emerald-500" : "bg-white/25"
+            }`}>
+              <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform duration-300 ${
+                isPaid ? "translate-x-6" : "translate-x-0"
+              }`} />
+            </div>
+          </button>
         </div>
       </div>
 
-      {/* Price — show if isPaid */}
+      {/* Price — show if isPaid with animation */}
       {isPaid && (
-        <div className="space-y-2">
+        <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
           <Label className={labelClass}>Price (USD) *</Label>
-          <Input
-            type="number"
-            step="0.01"
-            min="1"
-            placeholder="e.g. 9.99"
-            className={inputClass}
-            onChange={(e) =>
-              setValue("price", parseFloat(e.target.value) || null)
-            }
-            defaultValue={defaultValues?.price ?? ""}
-          />
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400 font-semibold">$</span>
+            <Input
+              type="number"
+              step="0.01"
+              min="1"
+              placeholder="e.g. 9.99"
+              className={inputClass + " pl-8"}
+              onChange={(e) =>
+                setValue("price", parseFloat(e.target.value) || null)
+              }
+              defaultValue={defaultValues?.price ?? ""}
+            />
+          </div>
           {errors.price && (
             <p className={errorClass}>⚠ {errors.price.message}</p>
           )}
