@@ -39,9 +39,10 @@ export default function IdeaDetails({ idea }: TProps) {
   const canViewFull = canViewIdea && (!idea.isPaid || isAuthor || hasAccess || isAdmin);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Main */}
-      <div className="lg:col-span-2 space-y-6">
+    <div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main */}
+        <div className="lg:col-span-2 space-y-6">
         {/* Header */}
         <div className="glass gradient-border rounded-2xl overflow-hidden">
           {idea.images?.[0] && (
@@ -64,9 +65,16 @@ export default function IdeaDetails({ idea }: TProps) {
             </div>
           )}
           <div className="p-6">
-            <span className="badge-purple rounded-full px-3 py-1 text-xs inline-flex items-center gap-1.5 mb-3">
-              <Tag className="w-3 h-3" /> {idea.category.name}
-            </span>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="badge-purple rounded-full px-3 py-1 text-xs inline-flex items-center gap-1.5">
+                <Tag className="w-3 h-3" /> {idea.category.name}
+              </span>
+              {isApproved && (
+                <span className="badge-green rounded-full px-3 py-1 text-xs inline-flex items-center gap-1.5">
+                  ✓ Approved
+                </span>
+              )}
+            </div>
             <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-4">
               {idea.title}
             </h1>
@@ -88,14 +96,36 @@ export default function IdeaDetails({ idea }: TProps) {
 
         {canViewFull ? (
           <>
+            {/* Problem Statement with Author & Vote */}
             <div className="glass gradient-border rounded-2xl p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 rounded-lg bg-red-500/20 flex items-center justify-center">
-                  <span className="text-red-400 text-xs font-bold">!</span>
+              {/* Author & Vote Section */}
+              <div className="mb-6 pb-6 border-b border-white/10">
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-sm font-bold">
+                      {idea.author.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="text-white font-medium text-sm">{idea.author.name}</p>
+                      <p className="text-white/30 text-xs">Author</p>
+                    </div>
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <VoteButtons ideaId={idea.id} initialUserVote={idea.userVote} />
+                  </div>
                 </div>
-                <h2 className="text-white font-semibold">Problem Statement</h2>
               </div>
-              <p className="text-white/60 text-sm leading-relaxed">{idea.problemStatement}</p>
+
+              {/* Problem Statement */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-lg bg-red-500/20 flex items-center justify-center">
+                    <span className="text-red-400 text-xs font-bold">!</span>
+                  </div>
+                  <h2 className="text-white font-semibold">Problem Statement</h2>
+                </div>
+                <p className="text-white/60 text-sm leading-relaxed">{idea.problemStatement}</p>
+              </div>
             </div>
 
             <div className="glass gradient-border rounded-2xl p-6">
@@ -129,6 +159,7 @@ export default function IdeaDetails({ idea }: TProps) {
               </div>
             )}
 
+            {/* Comments Section - Bottom */}
             <div className="glass gradient-border rounded-2xl p-6">
               <CommentSection ideaId={idea.id} />
             </div>
@@ -140,11 +171,11 @@ export default function IdeaDetails({ idea }: TProps) {
 
       {/* Sidebar */}
       <div className="space-y-4">
-        <div className="glass gradient-border rounded-2xl p-5">
+        <div className="glass gradient-border rounded-2xl p-5 hidden lg:block">
           <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Community Vote</p>
           <VoteButtons ideaId={idea.id} initialUserVote={idea.userVote} />
         </div>
-        <div className="glass gradient-border rounded-2xl p-5">
+        <div className="glass gradient-border rounded-2xl p-5 hidden lg:block">
           <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Author</p>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white text-sm font-bold">
@@ -156,7 +187,7 @@ export default function IdeaDetails({ idea }: TProps) {
             </div>
           </div>
         </div>
-        <div className="glass gradient-border rounded-2xl p-5 space-y-3">
+        <div className="glass gradient-border rounded-2xl p-5 space-y-3 hidden lg:block">
           <p className="text-white/40 text-xs uppercase tracking-wider">Stats</p>
           {[
             { label: "Views", value: idea.viewCount },
@@ -169,6 +200,10 @@ export default function IdeaDetails({ idea }: TProps) {
             </div>
           ))}
         </div>
+        {/* Comments Section - Above Copy Link */}
+        <div className="glass gradient-border rounded-2xl p-5">
+          <CommentSection ideaId={idea.id} />
+        </div>
         <div className="glass gradient-border rounded-2xl p-5">
           <Button
             onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("Link copied!", { duration: 2000 }); }}
@@ -178,6 +213,7 @@ export default function IdeaDetails({ idea }: TProps) {
           </Button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

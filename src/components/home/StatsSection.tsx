@@ -48,14 +48,13 @@ export default function StatsSection() {
               <LoadingSpinner />
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 animate-in fade-in duration-500">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
                   <div
                     key={stat.label}
-                    className="text-center animate-in fade-in slide-in-from-bottom-4 duration-500"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                    className="text-center"
                   >
                     <div className="flex justify-center mb-3">
                       <Icon className={`w-6 h-6 ${stat.color} animate-pulse`} />

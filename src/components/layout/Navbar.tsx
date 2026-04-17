@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,8 +9,6 @@ import { ROUTES } from "@/constants/routes";
 import {
   LayoutDashboard,
   LogOut,
-  Menu,
-  X,
   User,
   ChevronDown,
 } from "lucide-react";
@@ -25,6 +22,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import Logo from "@/components/shared/Logo";
+import MobileNav from "../layout/MobileNav";
 
 const navLinks = [
   { label: "Home", href: ROUTES.HOME },
@@ -36,7 +34,6 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const dashboardRoute = isAdmin
     ? ROUTES.ADMIN_DASHBOARD
@@ -44,17 +41,21 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <nav className="backdrop-blur-3xl bg-dark-400/75 border border-white/20 shadow-2xl mx-2 mt-3 rounded-2xl px-5 py-3" style={{ backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))" }}>
-
-        {/* 3 column layout: Logo | Nav Links | Buttons */}
-        <div className="flex items-center justify-between relative h-12">
+      <nav
+        className="backdrop-blur-3xl bg-dark-400/75 border-b md:border border-white/20 shadow-2xl md:mx-2 md:mt-3 md:rounded-2xl px-4 sm:px-5 py-3"
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))",
+        }}
+      >
+        <div className="flex items-center justify-between h-12">
 
           {/* LEFT — Logo */}
           <div className="shrink-0">
             <Logo variant="compact" />
           </div>
 
-          {/* CENTER — Nav Links */}
+          {/* CENTER — Nav Links (desktop only) */}
           <div className="hidden md:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2 items-center gap-3">
             {navLinks.map((link) => (
               <Link
@@ -72,11 +73,10 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* RIGHT — Auth Buttons */}
+          {/* RIGHT — Desktop Auth */}
           <div className="hidden md:flex items-center gap-2 shrink-0">
             {isAuthenticated && user ? (
               <>
-                {/* Dashboard Button */}
                 <Link href={dashboardRoute}>
                   <Button
                     size="sm"
@@ -87,7 +87,6 @@ export default function Navbar() {
                   </Button>
                 </Link>
 
-                {/* User Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-purple-500/10 transition-all border border-purple-400/30 hover:border-purple-400/50 duration-200 h-10 cursor-pointer">
@@ -147,7 +146,6 @@ export default function Navbar() {
                   </Button>
                 </Link>
 
-                {/* Divider */}
                 <div className="w-px h-5 bg-white/10" />
 
                 <Link href={ROUTES.REGISTER}>
@@ -162,67 +160,12 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className="md:hidden text-white/70 hover:text-white"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileOpen && (
-          <div className="md:hidden mt-3 pt-3 border-t border-white/10 flex flex-col gap-1.5">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
-                  pathname === link.href
-                    ? "text-purple-400 bg-purple-500/10 border border-purple-400/30"
-                    : "text-white/70 hover:text-purple-400 hover:bg-purple-500/10 border border-white/10"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-white/10">
-              {isAuthenticated ? (
-                <>
-                  <Link href={dashboardRoute} onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 justify-start gap-2 border border-purple-400/30 transition-all font-medium bg-transparent h-10 rounded-xl text-sm">
-                      <LayoutDashboard className="w-4 h-4" />
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <Button
-                    onClick={() => { logout(); setMobileOpen(false); }}
-                    className="w-full text-red-400 hover:bg-red-500/10 hover:text-red-300 justify-start gap-2 border border-red-400/30 transition-all font-medium bg-transparent h-10 rounded-xl text-sm"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link href={ROUTES.LOGIN} onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full text-white/80 hover:text-white border border-white/15 hover:bg-white/5 transition-all font-medium bg-transparent h-10 rounded-xl text-sm">
-                      Log in
-                    </Button>
-                  </Link>
-                  <Link href={ROUTES.REGISTER} onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full bg-purple-700 hover:bg-purple-800 text-white border-0 font-semibold h-10 rounded-xl text-sm shadow-[inset_0_0_0_1px_rgba(139,92,246,0.45)] hover:shadow-[0_0_16px_rgba(139,92,246,0.35)]">
-                      Sign Up
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
+          {/* RIGHT — Mobile Hamburger */}
+          <div className="md:hidden shrink-0">
+            <MobileNav />
           </div>
-        )}
+
+        </div>
       </nav>
     </header>
   );

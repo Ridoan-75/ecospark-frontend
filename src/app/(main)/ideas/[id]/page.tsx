@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -33,6 +34,13 @@ export default function IdeaDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push(ROUTES.LOGIN);
+    }
+  }, [isAuthenticated, router]);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: QUERY_KEYS.IDEA(id),

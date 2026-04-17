@@ -3,7 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, LayoutDashboard, User, Home, Lightbulb, Info } from "lucide-react";
+import {
+  Menu,
+  X,
+  LogOut,
+  LayoutDashboard,
+  User,
+  Home,
+  Lightbulb,
+  Info,
+  BookOpen,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants/routes";
@@ -16,6 +26,7 @@ import Logo from "@/components/shared/Logo";
 const navLinks = [
   { label: "Home", href: ROUTES.HOME, icon: Home },
   { label: "Ideas", href: ROUTES.IDEAS, icon: Lightbulb },
+  { label: "How It Works", href: ROUTES.HOW_IT_WORKS, icon: BookOpen },
   { label: "About", href: ROUTES.ABOUT, icon: Info },
 ];
 
@@ -25,7 +36,9 @@ export default function MobileNav() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const router = useRouter();
 
-  const dashboardRoute = isAdmin ? ROUTES.ADMIN_DASHBOARD : ROUTES.MEMBER_DASHBOARD;
+  const dashboardRoute = isAdmin
+    ? ROUTES.ADMIN_DASHBOARD
+    : ROUTES.MEMBER_DASHBOARD;
 
   const handleLogout = () => {
     logout();
@@ -61,7 +74,9 @@ export default function MobileNav() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
-                  <p className="text-white font-medium text-sm truncate">{user.name}</p>
+                  <p className="text-white font-medium text-sm truncate">
+                    {user.name}
+                  </p>
                   <p className="text-white/40 text-xs truncate">{user.email}</p>
                 </div>
               </div>
@@ -82,7 +97,7 @@ export default function MobileNav() {
                     "flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all",
                     isActive
                       ? "bg-purple-500/15 text-purple-300 border border-purple-500/25"
-                      : "text-white/60 hover:text-white hover:bg-white/5"
+                      : "text-white/60 hover:text-white hover:bg-white/5",
                   )}
                 >
                   <Icon className="w-4 h-4" />

@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,9 +12,9 @@ import {
   Shield,
   Zap,
   Users,
-  Leaf,        // sustainability meaning
-  Globe,       // global impact
-  Lightbulb,   // ideas/innovation
+  Leaf,
+  Globe,
+  Lightbulb,
 } from "lucide-react";
 
 export default function NewsletterSection() {
@@ -82,15 +81,13 @@ export default function NewsletterSection() {
             {/* LEFT */}
             <div className="space-y-8 text-center lg:text-left">
 
-              {/* ICON GROUP (UPDATED) */}
+              {/* ICON GROUP */}
               <div className="flex items-center justify-center lg:justify-start gap-4">
 
-                {/* MAIN EMAIL ICON */}
                 <div className="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/20 flex items-center justify-center">
                   <Mail className="w-7 h-7 text-purple-400" />
                 </div>
 
-                {/* EXTRA MEANINGFUL ICONS */}
                 <div className="flex gap-3">
 
                   <div className="w-16 h-16 rounded-xl bg-green-500/10 border border-green-400/20 flex items-center justify-center">
@@ -134,13 +131,7 @@ export default function NewsletterSection() {
             </div>
 
             {/* RIGHT */}
-            <motion.div 
-              className="space-y-5"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true, margin: "-100px" }}
-            >
+            <div className="space-y-5">
 
               <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
                 {[
@@ -166,10 +157,7 @@ export default function NewsletterSection() {
                 required
               />
 
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
+              <div>
                 <Button
                   onClick={handleSubmit}
                   disabled={loading}
@@ -187,7 +175,7 @@ export default function NewsletterSection() {
                     </>
                   )}
                 </Button>
-              </motion.div>
+              </div>
 
               <div className="flex items-center justify-center gap-2 pt-1">
                 <Shield className="w-3.5 h-3.5 text-white/30" />
@@ -195,7 +183,7 @@ export default function NewsletterSection() {
                   No spam. Unsubscribe anytime.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

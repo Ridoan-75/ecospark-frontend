@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
     .slice(0, 5);
 
   // ── Payments ───────────────────────────────────────
-  const paymentsResult = paymentsData?.data?.data;
+  const paymentsResult = paymentsData?.data;
   const totalRevenue = paymentsResult?.stats?.totalRevenue ?? 0;
   const totalPayments = paymentsResult?.stats?.totalSuccessfulPayments ?? 0;
 

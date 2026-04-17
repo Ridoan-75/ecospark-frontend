@@ -74,7 +74,7 @@ const getAdminAll = async (params?: {
   if (params?.status) query.append("status", params.status);
 
   const res = await axiosInstance.get<
-    TApiResponse<{ data: TPaymentsResponse; meta: TMeta }>
+    TApiResponse<TPaymentsResponse>
   >(`/payments/admin/all?${query.toString()}`);
 
   return res.data;

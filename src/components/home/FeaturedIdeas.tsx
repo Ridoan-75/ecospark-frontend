@@ -86,10 +86,7 @@ export default function FeaturedIdeas() {
 function IdeaCard({ idea, index }: { idea: TIdea; index: number }) {
   return (
     <Link href={ROUTES.IDEA_DETAILS(idea.id)}>
-      <div
-        className="glass glass-hover gradient-border rounded-2xl overflow-hidden cursor-pointer group h-full flex flex-col"
-        style={{ animationDelay: `${index * 0.1}s` }}
-      >
+      <div className="glass glass-hover gradient-border rounded-2xl overflow-hidden cursor-pointer group h-full flex flex-col">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
           {idea.images?.[0] ? (

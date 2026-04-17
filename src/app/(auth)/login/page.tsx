@@ -182,23 +182,25 @@ export default function LoginPage() {
           </div>
 
           {/* Submit */}
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full btn-glow text-white border-0 h-12 rounded-xl text-sm font-medium gap-2 group mt-2"
-          >
-            {loading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Signing in...
-              </div>
-            ) : (
-              <>
-                Sign in
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </>
-            )}
-          </Button>
+          <div>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-glow text-white border-0 h-12 rounded-xl text-sm font-medium gap-2 group mt-2"
+            >
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Signing in...
+                </div>
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </Button>
+          </div>
         </form>
 
         {/* Divider */}

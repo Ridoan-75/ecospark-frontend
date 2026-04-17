@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { Users, Lightbulb, CreditCard, TrendingUp, Clock, CheckCircle2 } from "lucide-react";
 import { ideaService } from "@/services/idea.service";
 import { userService } from "@/services/user.service";
@@ -32,8 +33,13 @@ export default function AdminOverview() {
 
   const { data: paymentsData, isLoading: paymentsLoading } = useQuery({
     queryKey: QUERY_KEYS.ADMIN_PAYMENTS,
-    queryFn: () => paymentService.getAdminAll({ limit: 1 }),
+    queryFn: () => paymentService.getAdminAll({}),
   });
+
+  // Debug log
+  useEffect(() => {
+    console.log("Payments Data:", paymentsData);
+  }, [paymentsData]);
 
   const stats = [
     {
@@ -71,7 +77,7 @@ export default function AdminOverview() {
     {
       icon: CreditCard,
       label: "Total Payments",
-      value: paymentsData?.data?.data?.stats?.totalSuccessfulPayments ?? 0,
+      value: paymentsData?.data?.stats?.totalSuccessfulPayments ?? 0,
       color: "text-emerald-400",
       bg: "bg-emerald-500/15",
       loading: paymentsLoading,
@@ -79,7 +85,7 @@ export default function AdminOverview() {
     {
       icon: TrendingUp,
       label: "Total Revenue",
-      value: formatCurrency(paymentsData?.data?.data?.stats?.totalRevenue ?? 0),
+      value: formatCurrency(paymentsData?.data?.stats?.totalRevenue ?? 0),
       color: "text-green-400",
       bg: "bg-green-500/15",
       loading: paymentsLoading,
