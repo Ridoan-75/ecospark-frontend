@@ -4,7 +4,7 @@ A sustainability community portal where members share, discover and vote on eco-
 
 ## 🌿 Live Demo
 
-- **Frontend**: https://ecospark-frontend.vercel.app
+- **Frontend**: https://ecospark-frontend.vercel.app](https://ecospark-frontend-gules.vercel.app
 - **Backend**: https://ecospark-backend.onrender.com
 
 ## 🛠️ Tech Stack
