@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 import ToastProvider from "@/providers/ToastProvider";
 import { GlobalGridBackground } from "@/components/shared/GlobalGridBackground";
+import { Chatbot } from "@/components/shared/Chatbot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         <QueryProvider>
           <ToastProvider />
           {children}
+          <Chatbot />
         </QueryProvider>
       </body>
     </html>
