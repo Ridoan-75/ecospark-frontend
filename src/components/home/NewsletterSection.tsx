@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
 import { AxiosError } from "axios";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -15,25 +18,36 @@ import {
   Leaf,
   Globe,
   Lightbulb,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function NewsletterSection() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isAuthenticated) {
+      toast.info("Please login to subscribe to our newsletter! 🌿");
+      router.push("/login");
+      return;
+    }
+
     if (!email) return;
     try {
       setLoading(true);
       await newsletterService.subscribe(email);
+      setIsSubscribed(true);
       toast.success("Subscribed successfully! 🌿", { duration: 3000 });
       setEmail("");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         toast.error(
-          (error?.response?.data?.message as string) ||
-            "Something went wrong",
+          (error?.response?.data?.message as string) || "Something went wrong",
           { duration: 5000 }
         );
       } else {
@@ -132,7 +146,6 @@ export default function NewsletterSection() {
 
             {/* RIGHT */}
             <div className="space-y-5">
-
               <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
                 {[
                   "Top voted projects",
@@ -148,34 +161,65 @@ export default function NewsletterSection() {
                 ))}
               </div>
 
-              <Input
-                type="email"
-                placeholder="Enter your email..."
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="glass border-white/15 text-white placeholder:text-white/30 focus:border-purple-500/50 bg-transparent rounded-xl h-14 px-5 cursor-pointer"
-                required
-              />
+              <AnimatePresence mode="wait">
+                {!isSubscribed ? (
+                  <motion.div
+                    key="subscribe-form"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-4"
+                  >
+                    <Input
+                      type="email"
+                      placeholder="Enter your email..."
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="glass border-white/15 text-white placeholder:text-white/30 focus:border-purple-500/50 bg-transparent rounded-xl h-14 px-5 cursor-pointer"
+                      required
+                    />
 
-              <div>
-                <Button
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  className="group relative overflow-hidden w-full bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white border-0 transition-all duration-300 font-semibold h-16 px-8 rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(147,51,234,0.4)] hover:shadow-[0_0_50px_rgba(147,51,234,0.7)] text-lg"
-                >
-                  {loading ? (
-                    <span className="flex items-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Subscribing...
-                    </span>
-                  ) : (
-                    <>
-                      Subscribe
-                      <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" />
-                    </>
-                  )}
-                </Button>
-              </div>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      className="group relative overflow-hidden w-full bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white border-0 transition-all duration-300 font-semibold h-16 px-8 rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(147,51,234,0.4)] hover:shadow-[0_0_50px_rgba(147,51,234,0.7)] text-lg"
+                    >
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Subscribing...
+                        </span>
+                      ) : (
+                        <>
+                          Subscribe
+                          <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" />
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="success-message"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                    className="glass-purple border border-purple-400/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.2, type: "spring" }}
+                      className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center"
+                    >
+                      <CheckCircle2 className="w-10 h-10 text-green-400" />
+                    </motion.div>
+                    <div className="space-y-1">
+                      <h4 className="text-xl font-bold text-white">Subscription Successful!</h4>
+                      <p className="text-white/60">Thank you for joining our green community.</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <div className="flex items-center justify-center gap-2 pt-1">
                 <Shield className="w-3.5 h-3.5 text-white/30" />

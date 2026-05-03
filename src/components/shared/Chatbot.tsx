@@ -36,7 +36,7 @@ const formatMarkdown = (text: string) => {
   // Markdown links
   formatted = formatted.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    "<a href='$2' class='text-primary hover:underline font-semibold'>$1</a>"
+    "<a href='$2' class='text-primary hover:underline font-semibold'>$1</a>",
   );
 
   const lines = formatted.split("\n");
@@ -222,7 +222,7 @@ export function Chatbot() {
             {/* ── Header ── */}
             <div className="shrink-0 bg-[#0f0f1a] border-b border-white/10 px-4 py-3.5 flex items-center justify-between relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent pointer-events-none" />
-              
+
               <div className="relative z-10 flex items-center gap-3">
                 <Logo variant="compact" className="scale-[0.85] origin-left" />
                 <div className="flex items-center gap-2">
@@ -385,40 +385,56 @@ export function Chatbot() {
       </AnimatePresence>
 
       {/* ── Toggle Button ── */}
-      <motion.button
-        data-chatbot-toggle
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center hover:shadow-xl"
-        onClick={() => setIsOpen((prev) => !prev)}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          duration: 0.35,
-          type: "spring",
-          stiffness: 260,
-          damping: 20,
-        }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={isOpen ? "open" : "closed"}
-            initial={{ rotate: -80, opacity: 0, scale: 0.6 }}
-            animate={{ rotate: 0, opacity: 1, scale: 1 }}
-            exit={{ rotate: 80, opacity: 0, scale: 0.6 }}
-            transition={{ duration: 0.18 }}
-          >
-            <MessageCircle
-              size={24}
-              className={isOpen ? "fill-primary-foreground" : ""}
-            />
-          </motion.div>
-        </AnimatePresence>
-        {/* Unread badge pulse when closed */}
+      <div className="fixed bottom-10 right-8 sm:bottom-12 sm:right-10 z-50 flex items-center justify-center">
+        {/* Continuous soft ripple effect when closed to catch attention */}
         {!isOpen && (
-          <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 border-2 border-background rounded-full animate-pulse" />
+          <div
+            className="absolute inset-0 bg-purple-500/30 rounded-full animate-ping"
+            style={{ animationDuration: "3s" }}
+          />
         )}
-      </motion.button>
+
+        <motion.button
+          data-chatbot-toggle
+          className="relative w-[64px] h-[64px] bg-linear-to-br from-purple-600 to-indigo-600 text-white rounded-full shadow-[0_8px_32px_rgba(139,92,246,0.4)] flex items-center justify-center hover:shadow-[0_16px_48px_rgba(139,92,246,0.6)] hover:scale-105 transition-all duration-300"
+          onClick={() => setIsOpen((prev) => !prev)}
+          whileTap={{ scale: 0.92 }}
+          initial={{ y: 20, opacity: 0 }}
+          animate={
+            isOpen
+              ? { y: 0, opacity: 1, scale: 1 }
+              : { y: [0, -18, 0], scale: [1, 1.08, 1], opacity: 1 }
+          }
+          transition={
+            isOpen
+              ? { duration: 0.35, type: "spring", stiffness: 260, damping: 20 }
+              : {
+                  y: { repeat: Infinity, duration: 2, ease: "easeInOut" },
+                  scale: { repeat: Infinity, duration: 2, ease: "easeInOut" },
+                  opacity: { duration: 0.35 },
+                }
+          }
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={isOpen ? "open" : "closed"}
+              initial={{ rotate: -80, opacity: 0, scale: 0.6 }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{ rotate: 80, opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.18 }}
+            >
+              <MessageCircle
+                size={24}
+                className={isOpen ? "fill-primary-foreground" : ""}
+              />
+            </motion.div>
+          </AnimatePresence>
+          {/* Unread badge pulse when closed */}
+          {!isOpen && (
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 border-2 border-background rounded-full animate-pulse shadow-sm" />
+          )}
+        </motion.button>
+      </div>
     </>
   );
 }
