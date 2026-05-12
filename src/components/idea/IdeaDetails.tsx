@@ -201,9 +201,11 @@ export default function IdeaDetails({ idea }: TProps) {
           ))}
         </div>
         {/* Comments Section - Above Copy Link */}
-        <div className="glass gradient-border rounded-2xl p-5">
-          <CommentSection ideaId={idea.id} />
-        </div>
+        {canViewFull && (
+          <div className="glass gradient-border rounded-2xl p-5">
+            <CommentSection ideaId={idea.id} />
+          </div>
+        )}
         <div className="glass gradient-border rounded-2xl p-5">
           <Button
             onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("Link copied!", { duration: 2000 }); }}
