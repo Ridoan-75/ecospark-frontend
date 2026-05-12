@@ -317,13 +317,19 @@ export default function RegisterPage() {
       {/* Footer note */}
       <p className="text-center text-white/25 text-xs mt-6">
         By registering, you agree to our{" "}
-        <span className="text-purple-400/70 hover:text-purple-400 cursor-pointer">
+        <Link
+          href={`${ROUTES.TERMS}?from=register`}
+          className="text-purple-400/70 hover:text-purple-400 transition-colors"
+        >
           Terms of Service
-        </span>{" "}
+        </Link>{" "}
         and{" "}
-        <span className="text-purple-400/70 hover:text-purple-400 cursor-pointer">
+        <Link
+          href={`${ROUTES.PRIVACY}?from=register`}
+          className="text-purple-400/70 hover:text-purple-400 transition-colors"
+        >
           Privacy Policy
-        </span>
+        </Link>
       </p>
     </div>
   );

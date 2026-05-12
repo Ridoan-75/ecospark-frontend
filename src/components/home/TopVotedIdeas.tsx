@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { ArrowUp, ArrowRight, Crown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,10 +27,10 @@ export default function TopVotedIdeas() {
             <Crown className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-purple-300 text-sm font-medium">Top Voted</span>
           </div>
-          <h2 className="text-4xl font-bold text-white mb-3">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Community <span className="gradient-text">Favorites</span>
           </h2>
-          <p className="text-white/40 max-w-md mx-auto text-base">
+          <p className="text-white/50 text-lg max-w-xl mx-auto">
             The ideas that our community loves the most
           </p>
         </div>
@@ -54,7 +53,6 @@ export default function TopVotedIdeas() {
             {ideas.map((idea: TIdea, index: number) => (
               <Link key={idea.id} href={ROUTES.IDEA_DETAILS(idea.id)}>
                 <div className="glass glass-hover gradient-border rounded-2xl overflow-hidden group h-full flex flex-col relative">
-                  {/* Rank badge */}
                   <div className="absolute top-3 left-3 z-10">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border ${
                       index === 0 ? "bg-amber-500/30 border-amber-500/50 text-amber-300" :
@@ -95,21 +93,12 @@ export default function TopVotedIdeas() {
         )}
 
         <div className="text-center mt-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, margin: "-50px" }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Link href={`${ROUTES.IDEAS}?sortBy=top_voted`}>
-              <Button className="btn-glass text-white/70 hover:text-white px-8 rounded-xl gap-2 group">
-                See All Top Ideas
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          </motion.div>
+          <Link href={`${ROUTES.IDEAS}?sortBy=top_voted`}>
+            <Button className="btn-glass text-white/70 hover:text-white px-8 rounded-xl gap-2 group">
+              See All Top Ideas
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

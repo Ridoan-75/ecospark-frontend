@@ -73,9 +73,11 @@ const SUGGESTIONS = [
   "Show trending sustainability topics",
 ];
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export function Chatbot() {
+  const pathname = usePathname();
+  if (pathname === "/login" || pathname === "/register") return null;
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);

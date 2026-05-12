@@ -17,6 +17,7 @@ import { formatDate, formatCurrency } from "@/lib/utils";
 import { TPayment } from "@/types/payment.types";
 import EmptyState from "@/components/shared/EmptyState";
 import PageHeader from "@/components/shared/PageHeader";
+import Pagination from "@/components/shared/Pagination";
 import StatCard from "@/components/dashboard/StatCard";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
@@ -28,6 +29,8 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 
 export default function AdminPaymentsPage() {
   const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 8;
 
   const { data, isLoading } = useQuery({
     queryKey: [...QUERY_KEYS.ADMIN_PAYMENTS, statusFilter],
@@ -40,6 +43,8 @@ export default function AdminPaymentsPage() {
 
   const payments = data?.data?.payments ?? [];
   const stats = data?.data?.stats;
+  const totalPages = Math.ceil(payments.length / PER_PAGE);
+  const paginatedPayments = payments.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -99,8 +104,10 @@ export default function AdminPaymentsPage() {
       ) : payments.length === 0 ? (
         <EmptyState icon={CreditCard} title="No payments found" />
       ) : (
+        <>
         <div className="glass gradient-border rounded-2xl overflow-hidden">
-          <table className="w-full table-glass">
+          <div className="overflow-x-auto">
+          <table className="w-full table-glass min-w-[650px]">
             <thead>
               <tr>
                 <th className="text-left p-4">User</th>
@@ -112,7 +119,7 @@ export default function AdminPaymentsPage() {
               </tr>
             </thead>
             <tbody>
-              {payments.map((payment: TPayment) => {
+              {paginatedPayments.map((payment: TPayment) => {
                 const config = statusConfig[payment.status] ?? {
                   label: payment.status,
                   className: "badge-purple",
@@ -159,7 +166,10 @@ export default function AdminPaymentsPage() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
+        <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+        </>
       )}
     </div>
   );

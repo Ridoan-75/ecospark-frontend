@@ -17,16 +17,16 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-[#080b14]">
-      {/* Sidebar - hidden on mobile, visible on lg+ */}
-      <div className="hidden lg:block">
+      {/* Sidebar - sticky, hidden on mobile */}
+      <div className="hidden lg:block sticky top-0 h-screen shrink-0">
         <AdminSidebar />
       </div>
-      
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+
+      {/* Main content - scrollable */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         <DashboardHeader />
-        <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-auto">
-          <div className="glass gradient-border rounded-2xl p-4 sm:p-6 md:p-8 h-full">
+        <main className="flex-1 p-3 sm:p-4 md:p-6">
+          <div className="glass gradient-border rounded-2xl p-4 sm:p-6 md:p-8">
             {children}
           </div>
         </main>

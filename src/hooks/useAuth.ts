@@ -2,7 +2,7 @@ import { useAuthStore } from "@/store/authStore";
 import { USER_ROLE } from "@/constants";
 
 export const useAuth = () => {
-  const { user, token, isAuthenticated, setAuth, logout, updateUser } =
+  const { user, token, isAuthenticated, _hasHydrated, setAuth, logout, updateUser } =
     useAuthStore();
 
   const isAdmin = user?.role === USER_ROLE.ADMIN;
@@ -14,6 +14,7 @@ export const useAuth = () => {
     isAuthenticated,
     isAdmin,
     isMember,
+    hasHydrated: _hasHydrated,
     setAuth,
     logout,
     updateUser,

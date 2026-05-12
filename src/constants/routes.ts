@@ -1,5 +1,8 @@
 export const ROUTES = {
   HOME: "/",
+  TERMS: "/terms",
+  PRIVACY: "/privacy",
+  COOKIES: "/cookies",
   IDEAS: "/ideas",
   IDEA_DETAILS: (id: string) => `/ideas/${id}`,
   ABOUT: "/about",
@@ -22,4 +25,7 @@ export const ROUTES = {
   ADMIN_CATEGORIES: "/dashboard/admin/categories",
   ADMIN_PAYMENTS: "/dashboard/admin/payments",
   ADMIN_NEWSLETTER: "/dashboard/admin/newsletter",
+  ADMIN_AI: "/dashboard/admin/ai-insights",
+
+  MEMBER_AI: "/dashboard/member/ai-insights",
 } as const;

@@ -11,6 +11,8 @@ import {
   User,
   Plus,
   ChevronRight,
+  Leaf,
+  Sparkles,
 } from "lucide-react";
 import Logo from "@/components/shared/Logo";
 
@@ -39,6 +41,12 @@ const memberLinks = [
     icon: User,
     exact: false,
   },
+  {
+    label: "AI Insights",
+    href: ROUTES.MEMBER_AI,
+    icon: Sparkles,
+    exact: false,
+  },
 ];
 
 export default function MemberSidebar() {
@@ -53,7 +61,7 @@ export default function MemberSidebar() {
     <aside className="sidebar-glass w-64 min-h-screen flex flex-col shrink-0">
 
       {/* Logo */}
-      <div className="p-6 border-b border-white/8">
+      <div className="h-16 px-5 flex items-center border-b border-white/8">
         <Logo variant="full" showSubtitle={true} subtitle="Member Portal" />
       </div>
 
@@ -89,12 +97,22 @@ export default function MemberSidebar() {
         })}
       </nav>
 
-      {/* Create Idea CTA */}
-      <div className="p-4 border-t border-white/8">
+      {/* New Idea CTA */}
+      <div className="px-4 pb-3 border-t border-white/8 pt-3">
         <Link href={ROUTES.MEMBER_CREATE_IDEA}>
           <button className="w-full btn-glow text-white rounded-xl py-2.5 text-sm font-medium flex items-center justify-center gap-2">
             <Plus className="w-4 h-4" />
             New Idea
+          </button>
+        </Link>
+      </div>
+
+      {/* Back to site */}
+      <div className="px-4 pb-4">
+        <Link href={ROUTES.HOME}>
+          <button className="w-full btn-glass text-white/50 hover:text-white rounded-xl py-2.5 text-sm flex items-center justify-center gap-2 transition-all">
+            <Leaf className="w-4 h-4" />
+            Back to site
           </button>
         </Link>
       </div>

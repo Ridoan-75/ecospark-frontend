@@ -16,6 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import IdeaStatusBadge from "@/components/idea/IdeaStatusBadge";
+import AdminCharts from "@/components/dashboard/admin/AdminCharts";
+import AIPlatformInsights from "@/components/dashboard/AIPlatformInsights";
 import { TUser } from "@/types/user.types";
 import { TIdea } from "@/types/idea.types";
 
@@ -110,6 +112,27 @@ export default function AdminDashboardPage() {
             subtitle={`${totalPayments} payments`}
           />
         </div>
+      )}
+
+      {/* Charts */}
+      {!isLoading && (
+        <AdminCharts
+          ideas={ideas}
+          payments={paymentsData?.data?.payments ?? []}
+        />
+      )}
+
+      {/* AI Platform Insights */}
+      {!isLoading && (
+        <AIPlatformInsights
+          totalUsers={totalUsers}
+          activeUsers={activeUsers}
+          totalIdeas={totalIdeas}
+          underReview={underReview}
+          approved={approved}
+          totalRevenue={totalRevenue}
+          totalPayments={totalPayments}
+        />
       )}
 
       {/* Pending Ideas */}

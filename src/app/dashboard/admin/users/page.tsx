@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import EmptyState from "@/components/shared/EmptyState";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import PageHeader from "@/components/shared/PageHeader";
+import Pagination from "@/components/shared/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import {
   Select,
@@ -29,6 +30,8 @@ export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusTarget, setStatusTarget] = useState<TUser | null>(null);
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 8;
   const debouncedSearch = useDebounce(search, 400);
 
   const { data, isLoading } = useQuery({
@@ -42,6 +45,8 @@ export default function AdminUsersPage() {
   });
 
   const users = data?.data ?? [];
+  const totalPages = Math.ceil(users.length / PER_PAGE);
+  const paginatedUsers = users.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const { mutate: updateStatus, isPending: updating } = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
@@ -114,8 +119,10 @@ export default function AdminUsersPage() {
       ) : users.length === 0 ? (
         <EmptyState icon={Users} title="No users found" />
       ) : (
+        <>
         <div className="glass gradient-border rounded-2xl overflow-hidden">
-          <table className="w-full table-glass">
+          <div className="overflow-x-auto">
+          <table className="w-full table-glass min-w-[600px]">
             <thead>
               <tr>
                 <th className="text-left p-4">User</th>
@@ -126,7 +133,7 @@ export default function AdminUsersPage() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {paginatedUsers.map((user) => (
                 <tr key={user.id}>
                   <td className="p-4">
                     <div className="flex items-center gap-3">
@@ -194,7 +201,10 @@ export default function AdminUsersPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
+        <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+        </>
       )}
 
       <ConfirmDialog

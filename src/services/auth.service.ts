@@ -25,8 +25,17 @@ const getMe = async () => {
   return res.data;
 };
 
+const googleLogin = async (payload: { name: string; email: string; picture?: string }) => {
+  const res = await axiosInstance.post<TApiResponse<TAuthResponse>>(
+    "/auth/google",
+    payload
+  );
+  return res.data;
+};
+
 export const authService = {
   register,
   login,
   getMe,
+  googleLogin,
 };

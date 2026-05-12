@@ -32,12 +32,15 @@ import IdeaStatusBadge from "@/components/idea/IdeaStatusBadge";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import EmptyState from "@/components/shared/EmptyState";
 import PageHeader from "@/components/shared/PageHeader";
+import Pagination from "@/components/shared/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AdminIdeasPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 8;
   const [approveTarget, setApproveTarget] = useState<TIdea | null>(null);
   const [rejectTarget, setRejectTarget] = useState<TIdea | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<TIdea | null>(null);
@@ -55,6 +58,8 @@ export default function AdminIdeasPage() {
   });
 
   const ideas = data?.data ?? [];
+  const totalPages = Math.ceil(ideas.length / PER_PAGE);
+  const paginatedIdeas = ideas.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
 
   const invalidate = () => {
@@ -151,8 +156,10 @@ export default function AdminIdeasPage() {
       ) : ideas.length === 0 ? (
         <EmptyState icon={Lightbulb} title="No ideas found" />
       ) : (
+        <>
         <div className="glass gradient-border rounded-2xl overflow-hidden">
-          <table className="w-full table-glass">
+          <div className="overflow-x-auto">
+          <table className="w-full table-glass min-w-[700px]">
             <thead>
               <tr>
                 <th className="text-left p-4">Idea</th>
@@ -164,7 +171,7 @@ export default function AdminIdeasPage() {
               </tr>
             </thead>
             <tbody>
-              {ideas.map((idea: TIdea) => (
+              {paginatedIdeas.map((idea: TIdea) => (
                 <tr key={idea.id}>
                   <td className="p-4">
                     <p className="text-white text-sm font-medium line-clamp-1 max-w-45">
@@ -233,7 +240,10 @@ export default function AdminIdeasPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
+        <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+        </>
       )}
 
       {/* Approve Confirm */}

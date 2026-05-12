@@ -29,7 +29,7 @@ export default function FeaturedIdeas() {
   const ideas: TIdea[] = data?.data || [];
 
   return (
-    <section className="py-24 px-4 relative">
+    <section className="py-20 px-4 relative">
 
       {/* Section Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-100 bg-purple-600/5 rounded-full blur-[100px] pointer-events-none" />
@@ -52,6 +52,7 @@ export default function FeaturedIdeas() {
             Discover the most impactful ideas voted by our community members
           </p>
         </div>
+
 
         {/* Ideas Grid */}
         {isLoading ? (

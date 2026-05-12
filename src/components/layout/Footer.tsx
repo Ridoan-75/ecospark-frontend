@@ -17,9 +17,9 @@ const footerLinks = {
     { label: "Dashboard", href: ROUTES.MEMBER_DASHBOARD },
   ],
   Legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Use", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+    { label: "Privacy Policy", href: ROUTES.PRIVACY },
+    { label: "Terms of Service", href: ROUTES.TERMS },
+    { label: "Cookie Policy", href: ROUTES.COOKIES },
   ],
 };
 

@@ -40,7 +40,7 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <section className="py-12 px-4">
+    <section className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="glass gradient-border rounded-2xl p-8">
           {loading ? (

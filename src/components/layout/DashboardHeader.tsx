@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LogOut, Home, Bell, Menu, X, LayoutDashboard, Users, Lightbulb, Tag, CreditCard, Mail, User, Plus, Shield } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,11 @@ export default function DashboardHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileMenuOpen]);
+
   const links = isAdmin ? adminLinks : memberLinks;
 
   const handleLogout = () => {
@@ -55,7 +60,7 @@ export default function DashboardHeader() {
 
   return (
     <>
-      <header className="navbar-glass border-b border-white/8 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 flex items-center justify-between shrink-0">
+      <header className="navbar-glass h-16 px-3 sm:px-4 md:px-6 flex items-center justify-between shrink-0 sticky top-0 z-30">
 
         {/* Left — Mobile Menu Button */}
         <div className="flex items-center gap-2">
@@ -67,7 +72,7 @@ export default function DashboardHeader() {
           </button>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            <div className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
             <span className="text-white/40 text-xs sm:text-sm">
               {isAdmin ? "Admin Panel" : "Member Panel"}
             </span>
@@ -93,10 +98,10 @@ export default function DashboardHeader() {
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2.5 glass rounded-xl px-3 py-1.5 hover:bg-white/10 transition-all cursor-pointer">
-                <Avatar className="w-7 h-7">
+              <button className="flex items-center gap-2.5 rounded-xl px-3 py-1.5 cursor-pointer transition-all duration-200 border border-white/10 hover:border-purple-400/40 bg-white/5 hover:bg-purple-500/10 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                <Avatar className="w-7 h-7 ring-1 ring-purple-400/30">
                   <AvatarImage src={user.profileImage || ""} />
-                  <AvatarFallback className="bg-purple-600 text-white text-xs font-bold">
+                  <AvatarFallback className="bg-linear-to-br from-purple-600 to-violet-700 text-white text-xs font-bold">
                     {getInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
@@ -113,35 +118,34 @@ export default function DashboardHeader() {
 
             <DropdownMenuContent
               align="end"
-              className="w-48 bg-dark-200/95 backdrop-blur-xl border-white/10 text-white"
+              className="w-52 border border-white/10 bg-[#0f0f1e]/90 backdrop-blur-3xl text-white shadow-[0_8px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)] rounded-2xl overflow-hidden p-1"
             >
-              <div className="px-3 py-2 border-b border-white/10">
-                <p className="text-white text-sm font-medium truncate">
+              {/* User info header */}
+              <div className="px-3 py-2.5 mb-1 rounded-xl bg-purple-500/8 border border-purple-500/15 mx-0.5">
+                <p className="text-white text-sm font-semibold truncate">
                   {user.name}
                 </p>
-                <p className="text-white/40 text-xs truncate">{user.email}</p>
+                <p className="text-white/35 text-xs truncate mt-0.5">{user.email}</p>
               </div>
 
               <DropdownMenuItem asChild>
                 <Link
-                  href={
-                    isAdmin
-                      ? ROUTES.ADMIN_DASHBOARD
-                      : ROUTES.MEMBER_PROFILE
-                  }
-                  className="flex items-center gap-2 cursor-pointer hover:bg-white/10 focus:bg-white/10 mt-1"
+                  href={isAdmin ? ROUTES.ADMIN_DASHBOARD : ROUTES.MEMBER_PROFILE}
+                  className="flex items-center gap-2.5 cursor-pointer rounded-xl hover:bg-purple-500/10 focus:bg-purple-500/10 focus:text-white text-white/70 hover:text-white transition-all px-3 py-2"
                 >
-                  <span className="text-sm">
-                    {isAdmin ? "Admin Dashboard" : "My Profile"}
-                  </span>
+                  {isAdmin
+                    ? <LayoutDashboard className="w-3.5 h-3.5 text-purple-400" />
+                    : <User className="w-3.5 h-3.5 text-purple-400" />
+                  }
+                  <span className="text-sm">{isAdmin ? "Admin Dashboard" : "My Profile"}</span>
                 </Link>
               </DropdownMenuItem>
 
-              <DropdownMenuSeparator className="bg-white/10" />
+              <DropdownMenuSeparator className="bg-white/8 my-1" />
 
               <DropdownMenuItem
                 onClick={handleLogout}
-                className="flex items-center gap-2 cursor-pointer text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-400"
+                className="flex items-center gap-2.5 cursor-pointer rounded-xl text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-400 transition-all px-3 py-2"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span className="text-sm">Logout</span>
@@ -154,8 +158,8 @@ export default function DashboardHeader() {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-16 lg:hidden z-40 bg-dark-400/50 backdrop-blur-sm">
-          <div className="absolute left-0 top-0 right-0 max-w-xs bg-dark-300 border-r border-white/8 min-h-full overflow-y-auto">
+        <div className="fixed inset-0 top-[52px] lg:hidden z-40 bg-black/40 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
+          <div className="absolute left-0 top-0 bottom-0 w-72 max-w-[85vw] bg-[#0a0a1a] border-r border-white/8 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             {/* Navigation Links */}
             <nav className="p-3 space-y-1">
               {links.map((link) => {
@@ -169,7 +173,7 @@ export default function DashboardHeader() {
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                       active
-                        ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25"
+                        ? "bg-purple-500/15 text-purple-400 border border-purple-500/25"
                         : "text-white/50 hover:text-white hover:bg-white/8"
                     )}
                   >
@@ -184,7 +188,7 @@ export default function DashboardHeader() {
             {!isAdmin && (
               <div className="p-3 border-t border-white/8">
                 <Link href={ROUTES.MEMBER_CREATE_IDEA} onClick={() => setMobileMenuOpen(false)}>
-                  <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 text-sm font-medium flex items-center justify-center gap-2 transition-all cursor-pointer">
+                  <button className="w-full btn-glow text-white rounded-lg py-2 text-sm font-medium flex items-center justify-center gap-2 transition-all cursor-pointer">
                     <Plus className="w-4 h-4" />
                     New Idea
                   </button>
@@ -195,9 +199,9 @@ export default function DashboardHeader() {
             {/* Admin Badge for Admins */}
             {isAdmin && (
               <div className="p-3">
-                <div className="bg-emerald-500/10 border border-emerald-500/25 rounded-lg px-3 py-2 flex items-center gap-2">
-                  <Shield className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-300 text-xs font-medium">
+                <div className="glass-purple border border-purple-500/25 rounded-lg px-3 py-2 flex items-center gap-2">
+                  <Shield className="w-3.5 h-3.5 text-purple-400" />
+                  <span className="text-purple-300 text-xs font-medium">
                     Administrator Access
                   </span>
                 </div>

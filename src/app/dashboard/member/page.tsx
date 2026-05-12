@@ -12,6 +12,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import IdeaCard from "@/components/idea/IdeaCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import AIIdeaSuggestions from "@/components/dashboard/AIIdeaSuggestions";
 
 export default function MemberDashboardPage() {
   const { user } = useAuth();
@@ -90,6 +91,9 @@ export default function MemberDashboardPage() {
           />
         </div>
       )}
+
+      {/* AI Idea Suggestions */}
+      <AIIdeaSuggestions />
 
       {/* Recent Ideas */}
       <div>

@@ -17,16 +17,16 @@ export default function Logo({
 }: TProps) {
   if (variant === "full") {
     return (
-      <Link href={ROUTES.HOME} className={`flex items-center gap-2.5 ${className}`}>
-        <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm">
-          <Leaf className="w-4 h-4 text-white" />
+      <Link href={ROUTES.HOME} className={`flex items-center gap-3 ${className}`}>
+        <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-purple-800 flex items-center justify-center glow-purple-sm shrink-0">
+          <Leaf className="w-5 h-5 text-white" />
         </div>
         <div>
-          <p className="text-white font-bold text-base leading-none">
+          <p className="text-white font-bold text-xl leading-none">
             Eco<span className="gradient-text-purple">Spark</span>
           </p>
           {showSubtitle && subtitle && (
-            <p className="text-white/30 text-[10px] mt-0.5">{subtitle}</p>
+            <p className="text-white/35 text-xs mt-1">{subtitle}</p>
           )}
         </div>
       </Link>

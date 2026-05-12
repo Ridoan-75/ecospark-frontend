@@ -7,9 +7,11 @@ type TAuthStore = {
   user: TUser | null;
   token: string | null;
   isAuthenticated: boolean;
+  _hasHydrated: boolean;
   setAuth: (user: TUser, token: string) => void;
   logout: () => void;
   updateUser: (user: Partial<TUser>) => void;
+  setHasHydrated: (v: boolean) => void;
 };
 
 export const useAuthStore = create<TAuthStore>()(
@@ -18,6 +20,9 @@ export const useAuthStore = create<TAuthStore>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      _hasHydrated: false,
+
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
 
       setAuth: (user, token) => {
         Cookies.set("token", token, { expires: 7 });
@@ -44,6 +49,9 @@ export const useAuthStore = create<TAuthStore>()(
         token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

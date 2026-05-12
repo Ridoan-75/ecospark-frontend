@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Shield,
   Leaf,
+  Sparkles,
 } from "lucide-react";
 import Logo from "@/components/shared/Logo";
 
@@ -54,6 +55,12 @@ const adminLinks = [
     icon: Mail,
     exact: false,
   },
+  {
+    label: "AI Insights",
+    href: ROUTES.ADMIN_AI,
+    icon: Sparkles,
+    exact: false,
+  },
 ];
 
 export default function AdminSidebar() {
@@ -68,7 +75,7 @@ export default function AdminSidebar() {
     <aside className="sidebar-glass w-64 min-h-screen flex flex-col shrink-0">
 
       {/* Logo */}
-      <div className="p-6 border-b border-white/8">
+      <div className="h-16 px-5 flex items-center border-b border-white/8">
         <Logo variant="full" showSubtitle={true} subtitle="Admin Panel" />
       </div>
 
@@ -121,7 +128,7 @@ export default function AdminSidebar() {
         <Link href={ROUTES.HOME}>
           <button className="w-full btn-glass text-white/50 hover:text-white rounded-xl py-2.5 text-sm flex items-center justify-center gap-2 transition-all">
             <Leaf className="w-4 h-4" />
-            View Site
+            Back to site
           </button>
         </Link>
       </div>

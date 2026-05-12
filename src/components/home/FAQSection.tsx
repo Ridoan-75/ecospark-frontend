@@ -1,0 +1,133 @@
+"use client";
+
+import { useState } from "react";
+import { HelpCircle, Sparkles, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const faqs = [
+  {
+    q: "How long does it take for my idea to be approved?",
+    a: "Our review team typically processes submissions within 2-3 business days. You'll receive notifications about your idea's status directly in your dashboard.",
+  },
+  {
+    q: "How much can I earn from my idea?",
+    a: "Earnings depend on community engagement, premium subscribers, and donations. Top ideas earn hundreds to thousands monthly based on their impact.",
+  },
+  {
+    q: "Is there a cost to join EcoSpark?",
+    a: "Joining is completely free! Premium features are optional and unlock additional monetization opportunities for your ideas.",
+  },
+  {
+    q: "Can I edit or update my idea after publishing?",
+    a: "You can edit your idea anytime while it's in Draft or Rejected status. Once approved and published, contact support for major changes.",
+  },
+  {
+    q: "Can I delete my idea?",
+    a: "Yes, you have full control over your content. You can delete your idea anytime from your dashboard as long as it hasn't been approved yet.",
+  },
+  {
+    q: "How do I increase my idea's visibility?",
+    a: "Add quality content with images, engage with comments, share your idea on social media, and stay active in the community to boost visibility.",
+  },
+  {
+    q: "Do I need technical knowledge to post ideas?",
+    a: "Not at all! EcoSpark is designed for everyone. Just share your sustainability idea clearly and our community will help refine and improve it.",
+  },
+  {
+    q: "What type of ideas are allowed?",
+    a: "We accept all sustainability-related ideas — environmental solutions, eco-friendly products, renewable energy projects, waste reduction strategies, and green innovations.",
+  },
+  {
+    q: "Can I collaborate with other users?",
+    a: "Yes! You can connect with other members through comments, discuss ideas, and collaborate to build better sustainability solutions together.",
+  },
+  {
+    q: "How will I know if my idea is successful?",
+    a: "Track performance through votes, comments, views, and community engagement metrics directly from your member dashboard in real time.",
+  },
+];
+
+export default function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggle = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <section className="py-20 px-4 relative">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-purple-600/8 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 glass-purple rounded-full px-4 py-2 mb-4">
+            <HelpCircle className="w-3.5 h-3.5 text-purple-400" />
+            <span className="text-purple-300 text-sm font-medium">Got questions?</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Frequently Asked <span className="gradient-text">Questions</span>
+          </h2>
+          <p className="text-white/50 text-lg max-w-xl mx-auto">
+            Everything you need to know about EcoSpark Hub
+          </p>
+        </div>
+
+        <div className="max-w-3xl mx-auto space-y-3">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div
+                key={index}
+                className={cn(
+                  "glass rounded-2xl overflow-hidden transition-all duration-300 border",
+                  isOpen
+                    ? "border-purple-500/30 bg-purple-500/5"
+                    : "border-white/8 hover:border-purple-500/20"
+                )}
+              >
+                <button
+                  onClick={() => toggle(index)}
+                  className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
+                      isOpen
+                        ? "bg-purple-500/30 text-purple-300"
+                        : "bg-white/5 text-white/30 group-hover:bg-purple-500/20 group-hover:text-purple-400"
+                    )}>
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </div>
+                    <span className={cn(
+                      "text-base md:text-lg font-medium",
+                      isOpen ? "text-purple-300" : "text-white/80 group-hover:text-white"
+                    )}>
+                      {faq.q}
+                    </span>
+                  </div>
+                  <div className={cn(
+                    "w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300",
+                    isOpen ? "bg-purple-500/30 rotate-180" : "bg-white/5 group-hover:bg-purple-500/20"
+                  )}>
+                    <ChevronDown className="w-3.5 h-3.5 text-white/30" />
+                  </div>
+                </button>
+
+                <div className={cn(
+                  "overflow-hidden transition-all duration-300",
+                  isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                )}>
+                  <div className="px-6 pb-5 pl-16">
+                    <div className="h-px bg-white/8 mb-4" />
+                    <p className="text-white/50 text-sm leading-relaxed">{faq.a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
