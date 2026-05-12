@@ -4,7 +4,8 @@
       "PowerShell(cmd /c \"dir /AL \"\"C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\EcoSpark Backend\\\\\"\"\")",
       "PowerShell(cmd /c \"dir /S /B \"\"C:\\\\Users\\\\Admin\\\\OneDrive\\\\Desktop\\\\EcoSpark Backend\\\\src\\\\modules\"\"\")",
       "Bash(npm install *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npm list *)"
     ]
   }
 }

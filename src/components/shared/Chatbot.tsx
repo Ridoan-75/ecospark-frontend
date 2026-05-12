@@ -77,7 +77,6 @@ import { useRouter, usePathname } from "next/navigation";
 
 export function Chatbot() {
   const pathname = usePathname();
-  if (pathname === "/login" || pathname === "/register") return null;
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -153,6 +152,8 @@ export function Chatbot() {
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
+
+  if (pathname === "/login" || pathname === "/register") return null;
 
   const handleSendMessage = async (e?: React.FormEvent, text?: string) => {
     e?.preventDefault();
@@ -379,7 +380,7 @@ export function Chatbot() {
                 </button>
               </form>
               <p className="text-center text-[10px] text-muted-foreground/60 mt-1.5">
-                ✨ EcoSpark AI · Powered by Gemini
+                ✨ EcoSpark AI · Powered by AI
               </p>
             </div>
           </motion.div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { LogOut, Home, Bell, Menu, X, LayoutDashboard, Users, Lightbulb, Tag, CreditCard, Mail, User, Plus, Shield } from "lucide-react";
+import { LogOut, Home, Bell, Menu, X, LayoutDashboard, Users, Lightbulb, Tag, CreditCard, Mail, User, Plus, Shield, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,7 @@ const adminLinks = [
   { label: "Categories", href: ROUTES.ADMIN_CATEGORIES, icon: Tag },
   { label: "Payments", href: ROUTES.ADMIN_PAYMENTS, icon: CreditCard },
   { label: "Newsletter", href: ROUTES.ADMIN_NEWSLETTER, icon: Mail },
+  { label: "AI Insights", href: ROUTES.ADMIN_AI, icon: Sparkles },
 ];
 
 const memberLinks = [
@@ -33,6 +34,7 @@ const memberLinks = [
   { label: "My Ideas", href: ROUTES.MEMBER_IDEAS, icon: Lightbulb },
   { label: "My Payments", href: ROUTES.MEMBER_PAYMENTS, icon: CreditCard },
   { label: "Profile", href: ROUTES.MEMBER_PROFILE, icon: User },
+  { label: "AI Insights", href: ROUTES.MEMBER_AI, icon: Sparkles },
 ];
 
 export default function DashboardHeader() {
