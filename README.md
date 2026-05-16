@@ -9,7 +9,7 @@ A sustainability community portal where members share, discover and vote on eco-
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS + Shadcn UI
 - **State**: Zustand
